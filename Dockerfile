@@ -18,10 +18,7 @@ RUN npm run build -- --configuration=production
 FROM nginx:alpine
 
 # Copy built app to nginx html directory
-COPY --from=build /app/dist/integrated-web /usr/share/nginx/html
-
-# Copy custom nginx config if needed
-# COPY nginx.conf /etc/nginx/nginx.conf
+COPY --from=build /app/dist/integrated-web/browser /usr/share/nginx/html
 
 # Expose port 80
 EXPOSE 80
