@@ -55,17 +55,36 @@ pipeline {
         }
         
         stage('Deploy to Kubernetes') {
-            steps {
-                echo 'Deploying to Docker Desktop Kubernetes...'
-                script {
-                    withCredentials([file(credentialsId: 'kube-config', variable: 'KUBECONFIG')]) {
-                        bat "kubectl apply -f angular-deploy.yml --kubeconfig=%KUBECONFIG%"
-                        bat "kubectl rollout restart deployment/angular-app-deployment --kubeconfig=%KUBECONFIG%"
-                        bat "kubectl rollout status deployment/angular-app-deployment --kubeconfig=%KUBECONFIG%"
-                    }
-                }
-            }
-        }
+			steps {
+				echo 'Deploying Angular App to Kubernetes...'
+				script {
+					// Use the same approach as your API pipeline - copy kubeconfig to workspace
+					bat """
+						copy /Y "%USERPROFILE%\\.kube\\config" "%WORKSPACE%\\kubeconfig"
+						set KUBECONFIG=%WORKSPACE%\\kubeconfig
+						kubectl apply -f angular-deploy.yml
+					"""
+					
+					// Restart & verify rollout for Angular app
+					bat """
+						set KUBECONFIG=%WORKSPACE%\\kubeconfig
+						kubectl rollout restart deployment/angular-app-deployment
+					"""
+					
+					bat """
+						set KUBECONFIG=%WORKSPACE%\\kubeconfig
+						kubectl rollout status deployment/angular-app-deployment
+					"""
+					
+					// Check deployment status
+					bat """
+						set KUBECONFIG=%WORKSPACE%\\kubeconfig
+						kubectl get pods -l app=angular-app
+						echo "Angular app deployment completed!"
+					"""
+				}
+			}
+		}
     }
     
     post {
