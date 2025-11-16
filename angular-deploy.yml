@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: angular-app-deployment
+  namespace: default
+  labels:
+    app: angular-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: angular-app
+  template:
+    metadata:
+      labels:
+        app: angular-app
+    spec:
+      containers:
+      - name: angular-app
+        image: karthiknat/integrated-web:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: angular-app-service
+  namespace: default
+  labels:
+    app: angular-app
+spec:
+  selector:
+    app: angular-app
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      name: http
