@@ -1,0 +1,47 @@
+<mat-toolbar color="primary" class="header-toolbar">
+  <!-- Shopping Cart Icon -->
+  <div class="cart-section">
+    <button 
+      mat-icon-button 
+      (click)="toggleCart()"
+      class="cart-button"
+      [attr.aria-label]="'Shopping cart with ' + cartCount() + ' items'"
+    >
+      <mat-icon [matBadge]="cartCount()" 
+                [matBadgeHidden]="cartCount() === 0"
+                matBadgeColor="accent"
+                matBadgeSize="small"
+                aria-hidden="false">
+        shopping_cart
+      </mat-icon>
+    </button>
+  </div>
+
+  <!-- Site Title -->
+  <div class="site-title">
+    <h1 class="title-text">E-Commerce Site</h1>
+  </div>
+
+  <!-- Checkout Button -->
+  <div class="checkout-section">
+    <button 
+      mat-raised-button 
+      color="accent" 
+      (click)="navigateToCheckOut()"
+      class="checkout-button"
+    >
+      Checkout
+    </button>
+  </div>
+
+  <!-- Cart Popup Overlay -->
+  <div 
+    class="cart-overlay" 
+    *ngIf="isCartOpen" 
+    (click)="closeCart()"
+  >
+    <div class="cart-popup-container" (click)="preventClose($event)">
+      <app-cart-popup></app-cart-popup>
+    </div>
+  </div>
+</mat-toolbar>

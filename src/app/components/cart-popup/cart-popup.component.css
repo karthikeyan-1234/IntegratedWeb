@@ -1,0 +1,138 @@
+/* Main cart popup card styling */
+.cart-popup-card {
+    width: 400px; /* Fixed width for the cart popup */
+    max-width: 90vw; /* Responsive: max 90% of viewport width on small screens */
+}
+
+/* Cart content area with scroll for many items */
+.cart-content {
+    max-height: 400px; /* Limit height to prevent overflow */
+    overflow-y: auto; /* Enable vertical scrolling if content exceeds height */
+}
+
+/* Empty cart state styling */
+.empty-cart {
+    display: flex; /* Flexbox for centering */
+    flex-direction: column; /* Stack icon and text vertically */
+    align-items: center; /* Center horizontally */
+    padding: 2rem; /* Spacing around empty cart */
+    color: rgba(0, 0, 0, 0.6); /* Gray color for empty state */
+}
+
+/* Empty cart icon styling */
+.empty-cart-icon {
+    font-size: 48px; /* Large icon size */
+    width: 48px; /* Match material icon dimensions */
+    height: 48px; /* Match material icon dimensions */
+    margin-bottom: 1rem; /* Space below icon */
+}
+
+/* Cart items list container */
+.cart-items-list {
+    padding: 0; /* Remove default list padding */
+}
+
+/* Individual cart item styling */
+.cart-item {
+    height: auto; /* Allow variable height based on content */
+    padding: 10px 10px; /* Spacing inside each cart item */
+}
+
+/* Border between cart items (except last one) */
+.cart-item:not(:last-child) {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08); /* Light separator line */
+}
+
+/* Item header: name and price */
+.item-header {
+    display: flex; /* Flexbox for side-by-side layout */
+    justify-content: space-between; /* Space between name and price */
+    align-items: center; /* Vertically center items */
+    margin-bottom: 8px; /* Space below header */
+}
+
+/* Product name styling */
+.item-name {
+    font-weight: 500; /* Medium weight for emphasis */
+    padding: 5px 5px;
+}
+
+/* Product price styling */
+.item-price {
+    color: rgba(0, 0, 0, 0.7); /* Slightly muted color for price */
+}
+
+/* Item actions: quantity controls and remove button */
+.item-actions {
+    display: flex; /* Flexbox for side-by-side layout */
+    justify-content: space-between; /* Space between quantity controls and remove button */
+    align-items: center; /* Vertically center items */
+    margin-top: 8px; /* Space above actions */
+}
+
+/* Quantity controls section */
+.quantity-section {
+    display: flex; /* Flexbox for horizontal layout */
+    align-items: center; /* Vertically center quantity elements */
+    gap: 8px; /* Space between quantity elements */
+}
+
+/* Quantity label styling */
+.quantity-label {
+    font-size: 0.9rem; /* Slightly smaller text */
+    color: rgba(0, 0, 0, 0.6); /* Muted color for label */
+}
+
+/* Quantity value display */
+.quantity-value {
+    min-width: 30px; /* Fixed width for number alignment */
+    text-align: center; /* Center the quantity number */
+    font-weight: 500; /* Medium weight for emphasis */
+}
+
+/* Line total styling for each item */
+.item-total {
+    color: #2e7d32; /* Green color for totals (Material success color) */
+    font-weight: 500; /* Medium weight for emphasis */
+    font-size: 0.9rem; /* Slightly smaller text */
+    margin-top: 4px; /* Space above line total */
+}
+
+/* Cart actions area (total section) */
+.cart-actions {
+    display: flex; /* Flexbox for layout */
+    justify-content: space-between; /* Space between elements */
+    align-items: center; /* Vertically center */
+    padding: 16px; /* Spacing around total section */
+}
+
+/* Total section container */
+.total-section {
+    display: flex; /* Flexbox for side-by-side layout */
+    justify-content: space-between; /* Space between label and value */
+    width: 100%; /* Full width of container */
+}
+
+/* Total label styling */
+.total-label {
+    font-weight: 500; /* Medium weight for emphasis */
+    color: #1976d2;
+}
+
+/* Total value styling */
+.total-value {
+    font-weight: bold; /* Bold for emphasis */
+    color: #1976d2; /* Blue color for total (Material primary color) */
+    font-size: 1.1rem; /* Slightly larger text */
+}
+
+/* Responsive adjustments for mobile devices */
+@media (max-width: 480px) {
+    .cart-popup-card {
+        width: 350px; /* Smaller width on very small screens */
+    }
+    
+    .cart-item {
+        padding: 8px 12px; /* Reduced padding on small screens */
+    }
+}
