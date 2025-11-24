@@ -36,11 +36,22 @@ export class CartService {
     this.cartItems.set(
       [
         {
-          product: {id: 1, name: "Item A", price: 100, image: "a.jpg"},
+          product: {
+            id: 1, 
+            name: 'HeadPhones', 
+            price: 50, 
+            image: 'images/headphones.jpg'
+          },
           quantity: 1
         },
         {
-          product: {id: 2, name: "Item B", price: 120, image: "b.jpg"},
+          product: {
+        id: 2,
+        name: 'Camera',
+        price: 70,
+        image: 'images/camera.jpg',
+        description: 'Camera'
+      },
           quantity: 2
         }
       ]

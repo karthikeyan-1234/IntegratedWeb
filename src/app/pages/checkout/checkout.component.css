@@ -1,0 +1,269 @@
+/* Main checkout container */
+.checkout-container {
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+  min-height: calc(100vh - 64px); /* Account for header height */
+}
+
+/* Page header styling */
+.page-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.page-title {
+  font-size: 2.5rem;
+  font-weight: 300;
+  color: #1976d2; /* Material primary color */
+  margin: 0 0 0.5rem 0;
+}
+
+.page-subtitle {
+  font-size: 1.1rem;
+  color: rgba(0, 0, 0, 0.6);
+  margin: 0;
+}
+
+/* Empty cart state */
+.empty-cart {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.empty-icon {
+  font-size: 4rem;
+  width: 4rem;
+  height: 4rem;
+  margin-bottom: 1rem;
+  color: #bdbdbd;
+}
+
+.empty-cart h2 {
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin: 0 0 1rem 0;
+}
+
+.empty-cart p {
+  font-size: 1rem;
+  margin: 0 0 2rem 0;
+}
+
+.continue-shopping-btn {
+  margin-top: 1rem;
+}
+
+/* Checkout content */
+.checkout-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Order summary card */
+.order-summary-card {
+  margin-bottom: 1rem;
+}
+
+.order-content {
+  padding: 0 !important; /* Remove default card content padding */
+}
+
+/* Cart items list */
+.cart-items-list {
+  padding: 0; /* Remove default list padding */
+}
+
+.cart-item {
+  height: auto; /* Allow variable height based on content */
+  padding: 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08); /* Separator between items */
+}
+
+.cart-item:last-child {
+  border-bottom: none; /* Remove border from last item */
+}
+
+/* Product info section */
+.product-info {
+  display: flex; /* Flexbox for horizontal layout */
+  align-items: center; /* Vertically center items */
+  gap: 1rem; /* Space between image and details */
+  margin-bottom: 1rem; /* Space below product info */
+}
+
+.product-image {
+  width: 60px; /* Fixed image width */
+  height: 60px; /* Fixed image height */
+  object-fit: cover; /* Maintain aspect ratio while covering container */
+  border-radius: 4px; /* Rounded corners */
+}
+
+.product-details {
+  flex: 1; /* Take remaining space */
+}
+
+.product-name {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin: 0 0 0.25rem 0;
+  color: #333;
+}
+
+.unit-price {
+  font-size: 0.9rem;
+  color: rgba(0, 0, 0, 0.6); /* Muted color for price */
+  margin: 0;
+}
+
+/* Quantity section */
+.quantity-section {
+  display: flex; /* Flexbox for horizontal layout */
+  align-items: center; /* Vertically center items */
+  gap: 1rem; /* Space between label and controls */
+  margin-bottom: 0.5rem; /* Space below quantity section */
+}
+
+.quantity-label {
+  font-size: 0.9rem;
+  color: rgba(0, 0, 0, 0.6); /* Muted color for label */
+}
+
+.quantity-controls {
+  display: flex; /* Flexbox for horizontal layout */
+  align-items: center; /* Vertically center buttons and value */
+  gap: 0.5rem; /* Space between buttons and value */
+}
+
+.quantity-value {
+  min-width: 30px; /* Fixed width for number alignment */
+  text-align: center; /* Center the quantity number */
+  font-weight: 500; /* Medium weight for emphasis */
+  font-size: 1rem;
+}
+
+/* Item total section */
+.item-total-section {
+  display: flex; /* Flexbox for horizontal layout */
+  justify-content: space-between; /* Space between total and remove button */
+  align-items: center; /* Vertically center items */
+}
+
+.line-total {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #2e7d32; /* Material success color for totals */
+}
+
+/* Order actions */
+.order-actions {
+  padding: 1rem !important; /* Ensure proper padding */
+}
+
+.total-section {
+  width: 100%; /* Full width of container */
+}
+
+.total-line {
+  display: flex; /* Flexbox for horizontal layout */
+  justify-content: space-between; /* Space between label and value */
+  align-items: center; /* Vertically center items */
+  padding: 0.5rem 0; /* Vertical spacing */
+}
+
+.total-label {
+  font-size: 1rem;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.total-value {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.final-total {
+  margin-top: 0.5rem; /* Space above final total */
+  padding-top: 1rem; /* Top padding for visual separation */
+  border-top: 2px solid #1976d2; /* Top border for emphasis */
+}
+
+.final-total .total-label {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.final-total .total-value {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #1976d2; /* Material primary color for emphasis */
+}
+
+/* Action buttons */
+.action-buttons {
+  display: flex; /* Flexbox for horizontal layout */
+  justify-content: space-between; /* Space between continue and checkout buttons */
+  align-items: center; /* Vertically center buttons */
+  gap: 1rem; /* Space between buttons */
+}
+
+.continue-btn,
+.checkout-btn {
+  min-width: 200px; /* Minimum button width */
+}
+
+.checkout-btn {
+  font-size: 1.1rem; /* Larger font size */
+  font-weight: 500; /* Medium weight for emphasis */
+  padding: 0 2rem; /* Horizontal padding */
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .checkout-container {
+    padding: 1rem; /* Reduced padding on tablets */
+  }
+  
+  .page-title {
+    font-size: 2rem; /* Smaller title on tablets */
+  }
+  
+  .action-buttons {
+    flex-direction: column; /* Stack buttons vertically */
+  }
+  
+  .continue-btn,
+  .checkout-btn {
+    width: 100%; /* Full width buttons */
+    min-width: auto; /* Remove minimum width */
+  }
+}
+
+@media (max-width: 480px) {
+  .checkout-container {
+    padding: 0.5rem; /* Further reduced padding on mobile */
+  }
+  
+  .page-title {
+    font-size: 1.75rem; /* Smaller title on mobile */
+  }
+  
+  .product-info {
+    flex-direction: column; /* Stack image and details vertically */
+    align-items: flex-start; /* Align to start */
+    text-align: left; /* Left align text */
+  }
+  
+  .quantity-section {
+    flex-direction: column; /* Stack label and controls vertically */
+    align-items: flex-start; /* Align to start */
+    gap: 0.5rem; /* Reduced gap */
+  }
+  
+  .item-total-section {
+    flex-direction: column; /* Stack total and button vertically */
+    align-items: flex-start; /* Align to start */
+    gap: 0.5rem; /* Space between total and button */
+  }
+}

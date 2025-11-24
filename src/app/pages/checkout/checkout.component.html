@@ -1,1 +1,137 @@
-<p>checkout works!</p>
+<div class="checkout-container">
+  
+  <!-- Page Header -->
+  <div class="page-header">
+    <h1 class="page-title">Checkout</h1>
+    <p class="page-subtitle">Review your order and complete purchase</p>
+  </div>
+
+  <!-- Empty Cart State -->
+  <div *ngIf="isEmptyCart()" class="empty-cart">
+    <mat-icon class="empty-icon">shopping_cart</mat-icon>
+    <h2>Your cart is empty</h2>
+    <p>Add some products to your cart before checking out</p>
+    <button 
+      mat-raised-button 
+      color="primary" 
+      (click)="continueShopping()"
+      class="continue-shopping-btn">
+      <mat-icon>shopping_basket</mat-icon>
+      Continue Shopping
+    </button>
+  </div>
+
+  <!-- Cart Summary when items exist -->
+  <div *ngIf="!isEmptyCart()" class="checkout-content">
+    
+    <!-- Order Summary Card -->
+    <mat-card class="order-summary-card">
+      <mat-card-header>
+        <mat-card-title>Order Summary</mat-card-title>
+        <mat-card-subtitle>
+          {{ cartItems().length }} item{{ cartItems().length !== 1 ? 's' : '' }} in your cart
+        </mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-divider></mat-divider>
+
+      <mat-card-content class="order-content">
+        
+        <!-- Cart Items List -->
+        <mat-list class="cart-items-list">
+          <mat-list-item *ngFor="let item of cartItems()" class="cart-item">
+            
+            <!-- Product Image and Name -->
+            <div matListItemTitle class="product-info">
+              <img 
+                [src]="item.product.image" 
+                [alt]="item.product.name"
+                class="product-image">
+              <div class="product-details">
+                <h3 class="product-name">{{ item.product.name }}</h3>
+                <p class="unit-price">{{ item.product.price | currency }} each</p>
+              </div>
+            </div>
+
+            <!-- Quantity Controls -->
+            <div matListItemLine class="quantity-section">
+              <span class="quantity-label">Quantity:</span>
+              <div class="quantity-controls">
+                <button 
+                  mat-icon-button 
+                  (click)="decreaseQuantity(item.product.id)"
+                  [disabled]="item.quantity <= 1">
+                  <mat-icon>remove</mat-icon>
+                </button>
+                <span class="quantity-value">{{ item.quantity }}</span>
+                <button 
+                  mat-icon-button 
+                  (click)="increaseQuantity(item.product.id)">
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+            </div>
+
+            <!-- Line Total and Remove Button -->
+            <div matListItemLine class="item-total-section">
+              <span class="line-total">
+                {{ getLineTotal(item) | currency }}
+              </span>
+              <button 
+                mat-icon-button 
+                color="warn" 
+                (click)="removeItem(item.product.id)"
+                aria-label="Remove item">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+
+          </mat-list-item>
+        </mat-list>
+
+      </mat-card-content>
+
+      <mat-divider></mat-divider>
+
+      <!-- Order Total -->
+      <mat-card-actions class="order-actions">
+        <div class="total-section">
+          <div class="total-line">
+            <span class="total-label">Subtotal:</span>
+            <span class="total-value">{{ cartTotal() | currency }}</span>
+          </div>
+          <div class="total-line">
+            <span class="total-label">Shipping:</span>
+            <span class="total-value">Free</span>
+          </div>
+          <mat-divider></mat-divider>
+          <div class="total-line final-total">
+            <span class="total-label">Total:</span>
+            <span class="total-value">{{ cartTotal() | currency }}</span>
+          </div>
+        </div>
+      </mat-card-actions>
+    </mat-card>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button 
+        mat-stroked-button 
+        (click)="continueShopping()"
+        class="continue-btn">
+        <mat-icon>arrow_back</mat-icon>
+        Continue Shopping
+      </button>
+      
+      <button 
+        mat-raised-button 
+        color="primary" 
+        (click)="processCheckout()"
+        class="checkout-btn">
+        <mat-icon>check_circle</mat-icon>
+        {{ getCheckoutButtonText() }}
+      </button>
+    </div>
+
+  </div>
+</div>
