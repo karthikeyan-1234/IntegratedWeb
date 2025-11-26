@@ -1,6 +1,8 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { CartItem } from '../models/cart-item.model';
 import { Product } from '../models/product.model';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -32,30 +34,14 @@ export class CartService {
     return total;
   })
 
-  constructor(){
-    this.cartItems.set(
-      [
-        {
-          product: {
-            id: 1, 
-            name: 'HeadPhones', 
-            price: 50, 
-            image: 'images/headphones.jpg'
-          },
-          quantity: 1
-        },
-        {
-          product: {
-        id: 2,
-        name: 'Camera',
-        price: 70,
-        image: 'images/camera.jpg',
-        description: 'Camera'
-      },
-          quantity: 2
-        }
-      ]
-    )
+  constructor(private http: HttpClient){
+
+    this.http.get<CartItem[]>(environment.apiBaseUrl+ "/Cart/GetCartItemsAsync").subscribe(res => {
+      this.cartItems.set(res)
+    }, err => {
+      console.log(err);
+    })
+
   }
 
 

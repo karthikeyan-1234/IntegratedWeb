@@ -21,38 +21,6 @@ export class LandingService {
     }, err => {
       console.log(err)
     })
-  
-
-    // this.products.set([
-    //   {
-    //     id: 1,
-    //     name: 'HeadPhones',
-    //     price: 50,
-    //     image: 'images/headphones.jpg',
-    //     description: 'HeadPhones'
-    //   },
-    //   {
-    //     id: 2,
-    //     name: 'Camera',
-    //     price: 70,
-    //     image: 'images/camera.jpg',
-    //     description: 'Camera'
-    //   },
-    //   {
-    //     id: 3,
-    //     name: 'Watches',
-    //     price: 70,
-    //     image: 'images/watches.jpg',
-    //     description: 'Watches'
-    //   },
-    //   {
-    //     id: 4,
-    //     name: 'HandBag',
-    //     price: 70,
-    //     image: 'images/handbag.jpg',
-    //     description: 'HandBag'
-    //   },
-    // ])
 
   }
 
