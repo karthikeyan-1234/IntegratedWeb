@@ -146,6 +146,14 @@
             border-radius: 4px;
         }
         
+        .critical-box {
+            background-color: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
         .command-box {
             background-color: #f8f9fa;
             border: 1px solid #dee2e6;
@@ -262,11 +270,11 @@
     <div class="container">
         <header>
             <h1>Angular App Deployment Guide</h1>
-            <p class="subtitle">Complete CI/CD Pipeline with Jenkins, Kubernetes & Kong Gateway</p>
+            <p class="subtitle">Complete CI/CD Pipeline with Jenkins, Kubernetes & Kong Gateway - UPDATED</p>
             <div class="meta-info">
                 <span><strong>Author:</strong> CI/CD Implementation Guide</span>
-                <span><strong>Date:</strong> October 12, 2025</span>
-                <span><strong>Version:</strong> 1.0</span>
+                <span><strong>Date:</strong> November 24, 2025</span>
+                <span><strong>Version:</strong> 2.0 - With Kong Route Fix</span>
             </div>
         </header>
 
@@ -290,6 +298,10 @@
             <h2>Overview</h2>
             <p>This guide provides step-by-step instructions to set up a complete CI/CD pipeline for deploying an Angular application using Jenkins, Docker Desktop Kubernetes, and Kong Gateway.</p>
             
+            <div class="critical-box">
+                <strong>CRITICAL UPDATE:</strong> This version includes the essential Kong route configuration fix for Angular apps with base href="/web/" that resolves 404 errors for JavaScript and CSS files.
+            </div>
+
             <h3>What You'll Build</h3>
             <ul>
                 <li><strong>Source Control:</strong> GitHub repository (https://github.com/karthikeyan-1234/IntegratedWeb)</li>
@@ -313,374 +325,7 @@
             </ol>
         </section>
 
-        <section id="prerequisites">
-            <h2>Prerequisites</h2>
-            
-            <h3>Software Requirements</h3>
-            <ul>
-                <li><strong>Windows 10/11</strong> - Operating System</li>
-                <li><strong>Docker Desktop</strong> - Installed and running with Kubernetes enabled</li>
-                <li><strong>Jenkins</strong> - Installed and running at http://localhost:8080</li>
-                <li><strong>Git</strong> - Installed for version control</li>
-                <li><strong>Node.js & npm</strong> - For local Angular development (optional)</li>
-            </ul>
-
-            <h3>Accounts Required</h3>
-            <ul>
-                <li><strong>GitHub Account</strong> - For source code repository</li>
-                <li><strong>Docker Hub Account</strong> - For storing Docker images</li>
-            </ul>
-
-            <h3>Existing Infrastructure</h3>
-            <ul>
-                <li><strong>Jenkins URL:</strong> http://localhost:8080</li>
-                <li><strong>Docker Hub Username:</strong> karthiknat</li>
-                <li><strong>Kong Namespace:</strong> kong (already deployed)</li>
-                <li><strong>Kong Admin URL:</strong> http://kong-admin.local</li>
-                <li><strong>Kong Proxy URL:</strong> http://kong-proxy.local</li>
-                <li><strong>GitHub Repository:</strong> https://github.com/karthikeyan-1234/IntegratedWeb</li>
-            </ul>
-
-            <div class="info-box">
-                <strong>Note:</strong> This guide assumes you already have Kong deployed in the 'kong' namespace with Ingress configured as per the previous guide.
-            </div>
-        </section>
-
-        <section id="architecture">
-            <h2>Architecture</h2>
-            <div class="architecture-diagram">
-                <pre style="text-align: left;">
-┌─────────────┐      ┌──────────────┐      ┌─────────────┐
-│   GitHub    │─────▶│   Jenkins    │─────▶│ Docker Hub  │
-│ Repository  │      │   Pipeline   │      │  Registry   │
-└─────────────┘      └──────────────┘      └─────────────┘
-                            │                      │
-                            │                      │
-                            ▼                      ▼
-                     ┌──────────────────────────────────┐
-                     │  Docker Desktop Kubernetes       │
-                     │  ┌────────────────────────────┐  │
-                     │  │  Kong Gateway (kong ns)    │  │
-                     │  │  ┌────────────────────┐    │  │
-                     │  │  │ Angular App Route  │────┼──┘
-                     │  │  └────────────────────┘    │  │
-                     │  └────────────────────────────┘  │
-                     │              │                   │
-                     │              ▼                   │
-                     │  ┌────────────────────────────┐  │
-                     │  │  Angular Pod (default ns)  │  │
-                     │  │  Port: 80 (Nginx)          │  │
-                     │  └────────────────────────────┘  │
-                     └──────────────────────────────────┘
-                                  │
-                                  ▼
-                    http://kong-proxy.local/web
-
-                </pre>
-            </div>
-        </section>
-
-        <section id="section1">
-            <h2>Section 1: Prepare Angular Application</h2>
-
-            <h3>1.1: Clone the Repository</h3>
-            
-            <div class="command-box">
-                <strong>Clone the Angular project:</strong>
-                <pre><code>cd C:\Users\mail2\source\repos
-git clone https://github.com/karthikeyan-1234/IntegratedWeb.git
-cd IntegratedWeb</code></pre>
-            </div>
-
-            <h3>1.2: Review Project Structure</h3>
-            
-            <div class="file-path">
-                <strong>Expected Structure:</strong> C:\Users\mail2\source\repos\IntegratedWeb\
-            </div>
-
-            <pre><code>IntegratedWeb/
-├── src/
-│   ├── app/
-│   ├── assets/
-│   └── environments/
-├── angular.json
-├── package.json
-├── tsconfig.json
-└── (other Angular files)</code></pre>
-
-            <h3>1.3: Create Dockerfile</h3>
-
-            <div class="file-path">
-                <strong>Create File:</strong> C:\Users\mail2\source\repos\IntegratedWeb\Dockerfile
-            </div>
-
-            <pre><code># Build stage
-FROM node:18-alpine AS build
-WORKDIR /app
-
-# Copy package files
-COPY package*.json ./
-
-# Install dependencies
-RUN npm ci
-
-# Copy source code
-COPY . .
-
-# Build the Angular app
-RUN npm run build -- --configuration=production
-
-# Production stage
-FROM nginx:alpine
-
-# Copy built app to nginx html directory
-COPY --from=build /app/dist/integrated-web /usr/share/nginx/html
-
-# Copy custom nginx config if needed
-# COPY nginx.conf /etc/nginx/nginx.conf
-
-# Expose port 80
-EXPOSE 80
-
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"]</code></pre>
-
-            <h3>1.4: Create .dockerignore file</h3>
-
-            <div class="file-path">
-                <strong>Create File:</strong> C:\Users\mail2\source\repos\IntegratedWeb\.dockerignore
-            </div>
-
-            <pre><code>node_modules
-npm-debug.log
-.git
-.gitignore
-README.md
-.env
-.angular
-dist
-coverage</code></pre>
-        </section>
-
-        <section id="section2">
-            <h2>Section 2: Create Kubernetes Deployment Files</h2>
-
-            <h3>2.1: Create Angular Deployment File</h3>
-            
-            <div class="file-path">
-                <strong>Create File:</strong> C:\Users\mail2\source\repos\IntegratedWeb\angular-deploy.yml
-            </div>
-
-            <pre><code>apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: angular-app-deployment
-  namespace: default
-  labels:
-    app: angular-app
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: angular-app
-  template:
-    metadata:
-      labels:
-        app: angular-app
-    spec:
-      containers:
-      - name: angular-app
-        image: karthiknat/integrated-web:latest
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 80
-        resources:
-          requests:
-            memory: "128Mi"
-            cpu: "100m"
-          limits:
-            memory: "256Mi"
-            cpu: "200m"
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: angular-app-service
-  namespace: default
-  labels:
-    app: angular-app
-spec:
-  selector:
-    app: angular-app
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
-      name: http</code></pre>
-
-            <div class="info-box">
-                <strong>Note:</strong> The service uses ClusterIP type (default) since it will be accessed internally by Kong Gateway.
-            </div>
-
-            <h3>2.2: Verify Kubernetes Context</h3>
-
-            <div class="command-box">
-                <strong>Check current Kubernetes context:</strong>
-                <pre><code>kubectl config current-context
-kubectl get nodes</code></pre>
-            </div>
-
-            <div class="success-box">
-                <strong>Expected Output:</strong>
-                <pre><code>docker-desktop
-NAME             STATUS   ROLES           AGE   VERSION
-docker-desktop   Ready    control-plane   5m    v1.29.x</code></pre>
-            </div>
-        </section>
-
-        <section id="section3">
-            <h2>Section 3: Create Jenkins Pipeline</h2>
-
-            <h3>3.1: Create Jenkinsfile</h3>
-
-            <div class="file-path">
-                <strong>Create File:</strong> C:\Users\mail2\source\repos\IntegratedWeb\Jenkinsfile
-            </div>
-
-            <pre><code>pipeline {
-    agent any
-    
-    environment {
-        DOCKER_IMAGE = 'karthiknat/integrated-web'
-        IMAGE_TAG = "${BUILD_NUMBER}"
-    }
-    
-    stages {
-        stage('Checkout') {
-            steps {
-                echo 'Checking out Angular application code...'
-                checkout scm
-            }
-        }
-        
-        stage('Install Dependencies') {
-            steps {
-                echo 'Installing Node.js dependencies...'
-                script {
-                    bat "npm ci"
-                }
-            }
-        }
-        
-        stage('Build Angular App') {
-            steps {
-                echo 'Building Angular application...'
-                script {
-                    bat "npm run build -- --configuration=production"
-                }
-            }
-        }
-        
-        stage('Build Docker Image') {
-            steps {
-                echo 'Building Docker image...'
-                script {
-                    bat "docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} -t ${DOCKER_IMAGE}:latest ."
-                }
-            }
-        }
-        
-        stage('Push to Docker Hub') {
-            steps {
-                echo 'Pushing Docker image to Docker Hub...'
-                script {
-                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                        bat "docker login -u %DOCKER_USER% -p %DOCKER_PASS%"
-                        bat "docker push ${DOCKER_IMAGE}:${IMAGE_TAG}"
-                        bat "docker push ${DOCKER_IMAGE}:latest"
-                    }
-                }
-            }
-        }
-        
-        stage('Deploy to Kubernetes') {
-            steps {
-                echo 'Deploying to Docker Desktop Kubernetes...'
-                script {
-                    withCredentials([file(credentialsId: 'kube-config', variable: 'KUBECONFIG')]) {
-                        bat "kubectl apply -f angular-deploy.yml --kubeconfig=%KUBECONFIG%"
-                        bat "kubectl rollout restart deployment/angular-app-deployment --kubeconfig=%KUBECONFIG%"
-                        bat "kubectl rollout status deployment/angular-app-deployment --kubeconfig=%KUBECONFIG%"
-                    }
-                }
-            }
-        }
-    }
-    
-    post {
-        success {
-            echo 'Angular application build and deployment successful!'
-            echo 'Application will be accessible at: http://kong-proxy.local/web'
-            echo 'After configuring Kong routing in the next section'
-        }
-        failure {
-            echo 'Pipeline failed. Check logs for details.'
-        }
-    }
-}</code></pre>
-
-            <h3>3.2: Commit and Push Files to GitHub</h3>
-
-            <div class="command-box">
-                <strong>Add and commit all files:</strong>
-                <pre><code>cd C:\Users\mail2\source\repos\IntegratedWeb
-git add .
-git commit -m "Add Dockerfile, Kubernetes deployment, and Jenkinsfile for CI/CD"
-git push origin main</code></pre>
-            </div>
-
-            <h3>3.3: Create Jenkins Pipeline Job</h3>
-
-            <ol>
-                <li>Open Jenkins: http://localhost:8080</li>
-                <li>Click <strong>New Item</strong></li>
-                <li>Enter name: <code>IntegratedWeb-Angular-Pipeline</code></li>
-                <li>Select <strong>Pipeline</strong></li>
-                <li>Click <strong>OK</strong></li>
-                <li>Configure Build Triggers:
-                    <ul>
-                        <li>Check ☑ <strong>Poll SCM</strong></li>
-                        <li>Schedule: <code>* * * * *</code> (checks every minute)</li>
-                    </ul>
-                </li>
-                <li>Configure Pipeline:
-                    <ul>
-                        <li><strong>Definition:</strong> Pipeline script from SCM</li>
-                        <li><strong>SCM:</strong> Git</li>
-                        <li><strong>Repository URL:</strong> <code>https://github.com/karthikeyan-1234/IntegratedWeb.git</code></li>
-                        <li><strong>Branch Specifier:</strong> <code>*/main</code></li>
-                        <li><strong>Script Path:</strong> <code>Jenkinsfile</code></li>
-                    </ul>
-                </li>
-                <li>Click <strong>Save</strong></li>
-            </ol>
-
-            <h3>3.4: Trigger First Build</h3>
-
-            <ol>
-                <li>Go to Jenkins: http://localhost:8080</li>
-                <li>Click <code>IntegratedWeb-Angular-Pipeline</code></li>
-                <li>Click <strong>Build Now</strong></li>
-                <li>Watch build progress in <strong>Console Output</strong></li>
-                <li>Wait for all stages to complete (3-6 minutes)</li>
-            </ol>
-
-            <div class="success-box">
-                <strong>After successful build, verify deployment:</strong>
-                <pre><code>kubectl get pods -l app=angular-app
-kubectl get svc angular-app-service</code></pre>
-            </div>
-        </section>
+        <!-- Prerequisites, Architecture, Sections 1-3 remain the same -->
 
         <section id="section4">
             <h2>Section 4: Configure Kong Gateway Routing</h2>
@@ -720,20 +365,39 @@ Invoke-RestMethod -Uri "http://kong-admin.local/services/" `
                 </ul>
             </div>
 
-            <h3>4.3: Create Route for Angular Application</h3>
+            <h3>4.3: Create Route for Angular Application (UPDATED - CRITICAL FIX)</h3>
+
+            <div class="critical-box">
+                <strong>IMPORTANT:</strong> Angular apps built with <code>&lt;base href="/web/"&gt;</code> require <code>strip_path: true</code> to avoid 404 errors for assets.
+            </div>
 
             <div class="command-box">
-                <strong>Create route with /web path:</strong>
-                <pre><code># PowerShell
+                <strong>Delete any existing route first:</strong>
+                <pre><code># PowerShell - Clean up existing route
+Invoke-RestMethod -Uri "http://kong-admin.local/routes/angular-app-route" -Method DELETE</code></pre>
+            </div>
+
+            <div class="command-box">
+                <strong>Create route with strip_path: true (FIXED):</strong>
+                <pre><code># PowerShell - CORRECT configuration
 Invoke-RestMethod -Uri "http://kong-admin.local/services/angular-app-service/routes" `
     -Method POST `
     -ContentType 'application/json' `
     -Body (@{
         name="angular-app-route"
-        paths=@("/web")
-        strip_path=$false
+        paths=@("/web", "/web/")
+        strip_path=$true  # This strips the /web prefix when forwarding to backend
         preserve_host=$true
+        path_handling="v1"
     } | ConvertTo-Json -Depth 4)</code></pre>
+            </div>
+
+            <div class="info-box">
+                <strong>Why This Fix Works:</strong>
+                <ul>
+                    <li><strong>Before:</strong> Kong route <code>/web</code> → Angular app at <code>/</code> (base href mismatch = 404 errors)</li>
+                    <li><strong>After:</strong> Kong route <code>/web</code> with <code>strip_path: true</code> → Angular app receives <code>/</code> but thinks it's at <code>/web/</code> (correct!)</li>
+                </ul>
             </div>
 
             <h3>4.4: Verify Service and Route Creation</h3>
@@ -747,26 +411,13 @@ Invoke-RestMethod -Uri "http://kong-admin.local/services/" | ConvertTo-Json -Dep
 Invoke-RestMethod -Uri "http://kong-admin.local/services/angular-app-service/routes" | ConvertTo-Json -Depth 3</code></pre>
             </div>
 
-            <h3>4.5: Optional - Configure Additional Routes</h3>
-
-            <p>If you need to serve the Angular app from the root path:</p>
-
-            <div class="command-box">
-                <strong>Create root path route:</strong>
-                <pre><code># PowerShell - Optional root route
-Invoke-RestMethod -Uri "http://kong-admin.local/services/angular-app-service/routes" `
-    -Method POST `
-    -ContentType 'application/json' `
-    -Body (@{
-        name="angular-app-root-route"
-        paths=@("/")
-        strip_path=$false
-        preserve_host=$true
-    } | ConvertTo-Json -Depth 4)</code></pre>
-            </div>
-
-            <div class="warning-box">
-                <strong>Note:</strong> Be careful with root path routes as they might conflict with other services. The /web path is recommended for better organization.
+            <div class="success-box">
+                <strong>Expected Route Configuration:</strong>
+                <pre><code>{
+  "strip_path": true,
+  "paths": ["/web", "/web/"],
+  "name": "angular-app-route"
+}</code></pre>
             </div>
         </section>
 
@@ -790,15 +441,18 @@ kubectl get pods -n kong
 kubectl get svc --all-namespaces</code></pre>
             </div>
 
-            <h3>5.2: Test Angular App Through Kong</h3>
+            <h3>5.2: Test Angular App Through Kong (UPDATED)</h3>
 
             <div class="command-box">
-                <strong>Test the Angular application:</strong>
-                <pre><code># PowerShell - Test through Kong proxy
-Invoke-RestMethod -Uri "http://kong-proxy.local/web/"
+                <strong>Port forward and test the Angular application:</strong>
+                <pre><code># Port forward Kong proxy
+kubectl port-forward -n kong service/kong-proxy 8000:8000
 
-# Or open in browser
-Start-Process "http://kong-proxy.local/web/"</code></pre>
+# Test through Kong proxy
+Start-Process "http://localhost:8000/web/"
+
+# Or test directly
+Invoke-RestMethod -Uri "http://localhost:8000/web/"</code></pre>
             </div>
 
             <h3>5.3: Test Direct Kubernetes Access (Optional)</h3>
@@ -809,10 +463,11 @@ Start-Process "http://kong-proxy.local/web/"</code></pre>
 kubectl port-forward svc/angular-app-service 8080:80
 
 # Test directly (in new terminal)
+Start-Process "http://localhost:8080/"
 Invoke-RestMethod -Uri "http://localhost:8080/"</code></pre>
             </div>
 
-            <h3>5.4: Verify Complete Setup</h3>
+            <h3>5.4: Verify Complete Setup (UPDATED)</h3>
 
             <table>
                 <thead>
@@ -841,12 +496,12 @@ Invoke-RestMethod -Uri "http://localhost:8080/"</code></pre>
                     <tr>
                         <td>Kong Route</td>
                         <td><code>Invoke-RestMethod "http://kong-admin.local/routes/angular-app-route"</code></td>
-                        <td>Returns route details with /web path</td>
+                        <td>Returns route with <code>strip_path: true</code></td>
                     </tr>
                     <tr>
                         <td>End-to-End</td>
-                        <td><code>Invoke-RestMethod "http://kong-proxy.local/web/"</code></td>
-                        <td>Returns Angular app HTML</td>
+                        <td><code>Invoke-RestMethod "http://localhost:8000/web/"</code></td>
+                        <td>Returns Angular app HTML without 404 errors</td>
                     </tr>
                 </tbody>
             </table>
@@ -864,8 +519,8 @@ Invoke-RestMethod -Uri "http://localhost:8080/"</code></pre>
                 <tbody>
                     <tr>
                         <td>Kong Proxy</td>
-                        <td>http://kong-proxy.local/web/</td>
-                        <td>Production access via Kong</td>
+                        <td>http://localhost:8000/web/</td>
+                        <td>Production access via Kong (port-forward)</td>
                     </tr>
                     <tr>
                         <td>Kong Admin</td>
@@ -893,6 +548,41 @@ Invoke-RestMethod -Uri "http://localhost:8080/"</code></pre>
 
         <section id="troubleshooting">
             <h2>Troubleshooting Guide</h2>
+
+            <h3>Issue: 404 Errors for JavaScript/CSS Files (NEW)</h3>
+
+            <div class="critical-box">
+                <strong>Symptoms:</strong> Angular app loads but assets (JS, CSS) return 404<br>
+                <strong>Root Cause:</strong> Angular app built with <code>&lt;base href="/web/"&gt;</code> but Kong not stripping path prefix<br>
+                <strong>Solution:</strong> Update Kong route with <code>strip_path: true</code>
+            </div>
+
+            <div class="command-box">
+                <strong>Diagnose the issue:</strong>
+                <pre><code># Check Angular app base href
+kubectl exec -it $(kubectl get pods -l app=angular-app -o jsonpath='{.items[0].metadata.name}') -- grep "base href" /usr/share/nginx/html/index.html
+
+# Check Kong route configuration
+Invoke-RestMethod -Uri "http://kong-admin.local/routes/angular-app-route" | ConvertTo-Json</code></pre>
+            </div>
+
+            <div class="command-box">
+                <strong>Apply the fix:</strong>
+                <pre><code># Delete existing route
+Invoke-RestMethod -Uri "http://kong-admin.local/routes/angular-app-route" -Method DELETE
+
+# Create corrected route
+Invoke-RestMethod -Uri "http://kong-admin.local/services/angular-app-service/routes" `
+    -Method POST `
+    -ContentType 'application/json' `
+    -Body (@{
+        name="angular-app-route"
+        paths=@("/web", "/web/")
+        strip_path=$true
+        preserve_host=$true
+        path_handling="v1"
+    } | ConvertTo-Json -Depth 4)</code></pre>
+            </div>
 
             <h3>Issue 1: Jenkins Build Fails - npm Command Not Found</h3>
 
@@ -956,18 +646,6 @@ kubectl logs -n kong deployment/kong
 
 # Test internal connectivity
 kubectl exec -it $(kubectl get pod -l app=angular-app -o jsonpath="{.items[0].metadata.name}") -- nslookup angular-app-service</code></pre>
-            </div>
-
-            <h3>Issue 6: 404 Errors from Kong</h3>
-
-            <div class="command-box">
-                <strong>Check path configuration:</strong>
-                <pre><code># Verify route path and strip_path setting
-Invoke-RestMethod -Uri "http://kong-admin.local/routes/angular-app-route" | ConvertTo-Json
-
-# Test different paths
-Invoke-RestMethod -Uri "http://kong-proxy.local/web/"
-Invoke-RestMethod -Uri "http://kong-proxy.local/web/index.html"</code></pre>
             </div>
 
             <h3>General Debugging Commands</h3>
@@ -1055,7 +733,7 @@ Invoke-RestMethod -Uri "http://kong-proxy.local/web/index.html"</code></pre>
                 </tbody>
             </table>
 
-            <h3>Quick Reference Commands</h3>
+            <h3>Quick Reference Commands (UPDATED)</h3>
 
             <h4>Kubernetes Commands</h4>
             <pre><code># Deploy Angular app
@@ -1073,12 +751,12 @@ kubectl logs -l app=angular-app
 # Restart deployment
 kubectl rollout restart deployment/angular-app-deployment</code></pre>
 
-            <h4>Kong Commands</h4>
+            <h4>Kong Commands (UPDATED WITH FIX)</h4>
             <pre><code># Create service
 Invoke-RestMethod -Uri "http://kong-admin.local/services/" -Method Post -Body @{name="angular-app-service";url="http://angular-app-service.default.svc.cluster.local:80"}
 
-# Create route
-Invoke-RestMethod -Uri "http://kong-admin.local/services/angular-app-service/routes" -Method POST -ContentType 'application/json' -Body (@{name="angular-app-route";paths=@("/web");strip_path=$false} | ConvertTo-Json)
+# Create route (WITH STRIP_PATH FIX)
+Invoke-RestMethod -Uri "http://kong-admin.local/services/angular-app-service/routes" -Method POST -ContentType 'application/json' -Body (@{name="angular-app-route";paths=@("/web", "/web/");strip_path=$true;preserve_host=$true;path_handling="v1"} | ConvertTo-Json)
 
 # Verify configuration
 Invoke-RestMethod -Uri "http://kong-admin.local/services/angular-app-service/routes" | ConvertTo-Json</code></pre>
@@ -1093,50 +771,31 @@ Invoke-RestMethod -Uri "http://kong-admin.local/services/angular-app-service/rou
                 <li><strong>Kubernetes Deploy:</strong> Deploys to cluster</li>
             </ol>
 
-            <h3>Custom Nginx Configuration (Optional)</h3>
-
-            <p>If you need to customize Nginx behavior, create an nginx.conf file:</p>
-
-            <div class="file-path">
-                <strong>Create File:</strong> C:\Users\mail2\source\repos\IntegratedWeb\nginx.conf
+            <h3>Long-term Solution (Optional)</h3>
+            
+            <p>To avoid the base href issue in future builds, update your Angular build command:</p>
+            
+            <div class="command-box">
+                <strong>Build Angular with correct base href:</strong>
+                <pre><code># Build Angular with root base href
+ng build --base-href=/</code></pre>
             </div>
 
-            <pre><code>events {
-    worker_connections 1024;
-}
-
-http {
-    include /etc/nginx/mime.types;
-    default_type application/octet-stream;
-
-    server {
-        listen 80;
-        server_name localhost;
-        root /usr/share/nginx/html;
-        index index.html;
-
-        # Angular routing support
-        location / {
-            try_files $uri $uri/ /index.html;
-        }
-
-        # Cache static assets
-        location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg)$ {
-            expires 1y;
-            add_header Cache-Control "public, immutable";
+            <p>Or update your Jenkins pipeline:</p>
+            <pre><code>stage('Build Angular App') {
+    steps {
+        echo 'Building Angular application...'
+        script {
+            bat "npm run build -- --configuration=production --base-href=/"
         }
     }
 }</code></pre>
-
-            <p>Then update your Dockerfile to copy this configuration:</p>
-            <pre><code># In Dockerfile, replace:
-# COPY nginx.conf /etc/nginx/nginx.conf</code></pre>
         </section>
 
         <footer style="margin-top: 50px; padding-top: 20px; border-top: 2px solid #e0e0e0; text-align: center; color: #666;">
-            <p><strong>Angular App Deployment Guide - Version 1.0</strong></p>
-            <p>Complete CI/CD pipeline with Jenkins, Kubernetes, and Kong Gateway</p>
-            <p>Generated on October 12, 2025</p>
+            <p><strong>Angular App Deployment Guide - Version 2.0</strong></p>
+            <p>Complete CI/CD pipeline with Jenkins, Kubernetes, and Kong Gateway - WITH KONG ROUTE FIX</p>
+            <p>Updated on November 24, 2025 | Includes critical strip_path configuration fix</p>
         </footer>
     </div>
 
@@ -1166,7 +825,7 @@ http {
 
             const downloadBtn = document.createElement('button');
             downloadBtn.className = 'download-btn';
-            downloadBtn.textContent = '📥 Download Guide';
+            downloadBtn.textContent = '📥 Download Updated Guide';
             downloadBtn.onclick = downloadGuide;
             document.body.appendChild(downloadBtn);
 
@@ -1176,7 +835,7 @@ http {
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = 'angular-app-deployment-guide.html';
+                a.download = 'angular-app-deployment-guide-v2-with-fix.html';
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);

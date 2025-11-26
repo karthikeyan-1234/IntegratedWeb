@@ -98,21 +98,13 @@ export class CartService {
     }
   }
 
-  updateQuantity(productId: number, quantity: number){
-    var isExists = this.cartItems().find(x => x.product.id == productId);
-    var updatedItems: CartItem[] = [];
-
-    if(isExists){
-      this.cartItems().forEach(x => {
-        if(x.product.id === productId){
-          x.quantity = quantity;
-        }
-        updatedItems.push(x);
-      })
-    }
-
-    this.cartItems.set(updatedItems);
-  }
+  updateQuantity(productId: number, quantity: number) {
+  this.cartItems.update(items =>
+    items.map(item =>
+      item.product.id === productId ? { ...item, quantity } : item
+    )
+  );
+}
 
   getCartItems(){
     return this.cartItems
