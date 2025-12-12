@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
-  apiBaseUrl: 'http://kong-proxy.local/api',
-  swaggerUrl: 'http://kong-proxy.local/swagger/index.html'
+  apiBaseUrl: 'https://localhost:7216/api',
+  swaggerUrl: 'https://localhost:7216/swagger/index.html'
 };

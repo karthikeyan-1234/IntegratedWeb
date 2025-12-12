@@ -33,4 +33,8 @@ export class LandingService {
       return x.id == id;
     })
   }
+
+  addProduct(product: Product): void {
+  this.products.update(products => [...products, product]);
+}
 }

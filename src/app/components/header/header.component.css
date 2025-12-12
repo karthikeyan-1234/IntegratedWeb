@@ -10,8 +10,18 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow for visual separation */
 }
 
+/* Product Form Section - NEW */
+.product-form-section {
+  margin-right: 8px; /* Space between product form and cart icons */
+}
+
+.product-form-button {
+  margin-left: -12px; /* Adjust Material icon button padding */
+}
+
+/* Cart Section */
 .cart-section {
-  flex: 1;
+  margin-right: 16px; /* Space between cart and title */
 }
 
 .cart-button {
@@ -59,6 +69,26 @@
   animation: slideIn 0.3s ease-out;
 }
 
+/* Product Form Overlay - NEW */
+.product-form-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  z-index: 9999;
+}
+
+.product-form-container {
+  margin-top: 64px; /* Mat-toolbar height */
+  margin-left: 16px;
+  animation: slideIn 0.3s ease-out;
+}
+
 @keyframes slideIn {
   from {
     opacity: 0;
@@ -72,7 +102,8 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .cart-popup-container {
+  .cart-popup-container,
+  .product-form-container {
     margin-left: 8px;
     margin-right: 8px;
   }
@@ -89,5 +120,11 @@
   
   .header-toolbar {
     padding: 0 12px; /* Reduce padding on mobile */
+  }
+  
+  /* Stack icons on very small screens */
+  .product-form-section,
+  .cart-section {
+    margin-right: 4px;
   }
 }

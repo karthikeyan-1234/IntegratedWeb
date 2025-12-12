@@ -9,6 +9,7 @@ import { CartService } from '../../services/cart.service';
 import { Router, RouterModule } from '@angular/router';
 import { signal } from '@angular/core';
 import { CartPopupComponent } from '../cart-popup/cart-popup.component';
+import { ProductFormPopupComponent } from '../product-form-popup/product-form-popup.component';
 
 @Component({
   selector: 'app-header',
@@ -19,16 +20,17 @@ import { CartPopupComponent } from '../cart-popup/cart-popup.component';
     MatBadgeModule,
     MatIconModule,
     RouterModule,
-    CartPopupComponent
+    CartPopupComponent,
+    ProductFormPopupComponent
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
 export class HeaderComponent {
 
-
   cartCount : Signal<number>;
   isCartOpen: boolean = false;
+  isProductFormOpen = false;
 
   constructor(private cartService: CartService, private router: Router){
     this.cartCount = this.cartService.cartCount;
@@ -44,6 +46,23 @@ export class HeaderComponent {
 
   closeCart(){
     this.isCartOpen = false;
+  }
+
+  closeProductForm() {
+    this.isProductFormOpen = false;
+  }
+
+  toggleProductForm() {
+    this.isProductFormOpen = !this.isProductFormOpen;
+    if (this.isProductFormOpen) {
+      this.isCartOpen = false; // Close cart if product form opens
+    }
+  }
+
+
+  closeAllPopups() {
+    this.isCartOpen = false;
+    this.isProductFormOpen = false;
   }
 
   // Close cart on escape key press

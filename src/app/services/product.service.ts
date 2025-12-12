@@ -15,4 +15,8 @@ export class ProductService {
   getAllProducts():Observable<Product[]>{
     return this.http.get<Product[]>(environment.apiBaseUrl + "/Product/GetProductsAsync")
   }
+
+  addProduct(newProduct: Product):Observable<Product>{
+    return this.http.post<Product>(environment.apiBaseUrl + "/Product/AddProductAsync", newProduct)
+  }
 }
