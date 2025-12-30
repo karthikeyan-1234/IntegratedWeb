@@ -1,0 +1,343 @@
+/* Table Container */
+.table-container {
+  margin: 2rem auto;
+  max-width: 1200px;
+  padding: 0 1rem;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  background-color: white;
+}
+
+/* Material Table Styling */
+mat-table {
+  width: 100%;
+  background: transparent;
+}
+
+/* Header Row Styling */
+mat-header-row {
+  background-color: #f5f5f5;
+  height: 56px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+mat-header-cell {
+  color: #1976d2; /* Primary color */
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 0 16px;
+}
+
+/* Data Row Styling */
+mat-row {
+  height: 60px;
+  transition: background-color 0.2s ease;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+mat-row:hover {
+  background-color: #f9f9f9;
+}
+
+mat-row:nth-child(even) {
+  background-color: #fafafa;
+}
+
+mat-row:nth-child(even):hover {
+  background-color: #f5f5f5;
+}
+
+mat-cell {
+  color: #333;
+  font-size: 14px;
+  padding: 0 16px;
+  word-break: break-word;
+  vertical-align: middle;
+}
+
+/* Column-specific styling */
+.mat-column-id {
+  flex: 0 0 80px;
+  color: #666;
+  font-weight: 500;
+  font-family: 'Roboto Mono', monospace;
+}
+
+.mat-column-name {
+  flex: 1;
+  min-width: 100px;
+  font-weight: 500;
+  color: #222;
+}
+
+
+.mat-column-description {
+  flex: 1;
+  min-width: 200px;
+  font-weight: 500;
+  font-style: italic;
+  color: #222;
+}
+
+.mat-column-price {
+  flex: 0 0 120px;
+  font-weight: 600;
+  color: #1976d2; /* Primary color for prices */
+}
+
+.mat-column-price::before {
+  content: '$';
+  margin-right: 2px;
+  font-weight: 400;
+  color: #666;
+}
+
+
+
+/* Action column styling for future edit/delete buttons */
+.mat-column-actions {
+  flex: 0 0 120px;
+  text-align: center;
+  padding: 8px 16px !important;
+}
+
+/* Action buttons container */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Edit button styling (for future implementation) */
+.edit-button {
+  background-color: #ff9800 !important; /* Orange for edit */
+  color: white !important;
+  min-width: 40px !important;
+  padding: 0 !important;
+  height: 36px !important;
+  width: 36px !important;
+  border-radius: 4px !important;
+}
+
+.edit-button:hover {
+  background-color: #f57c00 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(255, 152, 0, 0.2);
+}
+
+/* Delete button styling (for future implementation) */
+.delete-button {
+  background-color: #f44336 !important; /* Red for delete */
+  color: white !important;
+  min-width: 40px !important;
+  padding: 0 !important;
+  height: 36px !important;
+  width: 36px !important;
+  border-radius: 4px !important;
+}
+
+.delete-button:hover {
+  background-color: #d32f2f !important;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(244, 67, 54, 0.2);
+}
+
+/* Edit/Delete button icons */
+.edit-button mat-icon,
+.delete-button mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+}
+
+/* Empty state styling */
+.no-data-row {
+  height: 100px;
+  text-align: center;
+  color: #999;
+  font-style: italic;
+}
+
+.no-data-cell {
+  justify-content: center;
+  font-size: 16px;
+}
+
+/* Loading state */
+.loading-row {
+  height: 100px;
+  text-align: center;
+}
+
+.loading-cell {
+  justify-content: center;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+  .table-container {
+    margin: 1.5rem auto;
+    padding: 0 0.5rem;
+  }
+  
+  .mat-column-description {
+    flex: 1.5;
+    min-width: 200px;
+    -webkit-line-clamp: 1;
+    line-clamp:inherit;
+  }
+}
+
+@media (max-width: 768px) {
+  .table-container {
+    margin: 1rem auto;
+    border-radius: 4px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+  }
+  
+  mat-header-row {
+    height: 48px;
+  }
+  
+  mat-row {
+    height: 52px;
+  }
+  
+  mat-header-cell {
+    font-size: 12px;
+    padding: 0 12px;
+  }
+  
+  mat-cell {
+    font-size: 13px;
+    padding: 0 12px;
+  }
+  
+  .mat-column-id {
+    flex: 0 0 60px;
+  }
+  
+  .mat-column-price {
+    flex: 0 0 100px;
+  }
+  
+  .mat-column-actions {
+    flex: 0 0 100px;
+  }
+  
+  .action-buttons {
+    gap: 4px;
+  }
+  
+  .edit-button,
+  .delete-button {
+    height: 32px !important;
+    width: 32px !important;
+    min-width: 32px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .table-container {
+    margin: 0.5rem auto;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+    border: 1px solid #eee;
+  }
+  
+  mat-header-row {
+    height: 44px;
+  }
+  
+  mat-row {
+    height: auto;
+    min-height: 48px;
+  }
+  
+  mat-cell {
+    padding: 8px 12px;
+  }
+  
+  .mat-column-description {
+    display: none; /* Hide description on very small screens */
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+
+/* Animation for row actions */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+mat-row {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Ensure table scrolls horizontally on small screens */
+.table-scroll-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Custom scrollbar for table */
+.table-container::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+
+.table-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Focus states for accessibility */
+mat-row:focus-within {
+  background-color: #e3f2fd;
+  outline: 2px solid #1976d2;
+  outline-offset: -2px;
+}
+
+/* Print styles */
+@media print {
+  .table-container {
+    box-shadow: none;
+    border: 1px solid #ddd;
+  }
+  
+  mat-header-row {
+    background-color: #eee !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: economy;
+  }
+  
+  .mat-column-actions,
+  .action-buttons {
+    display: none;
+  }
+}
