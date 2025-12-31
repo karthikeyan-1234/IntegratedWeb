@@ -1,29 +1,55 @@
+<!-- Header Toolbar -->
 <mat-toolbar color="primary" class="header-toolbar">
-  <!-- Product Form Icon - NEW -->
-  <div class="product-form-section">
-    <button mat-icon-button (click)="toggleProductForm()" class="product-form-button" [attr.aria-label]="'Add new product'" matTooltip="Add Product">
-      <mat-icon>add</mat-icon>
+  
+  <!-- Sidebar Toggle Button -->
+  <div class="sidebar-toggle-section">
+    <button mat-icon-button 
+            (click)="toggleSidebar()"
+            class="sidebar-toggle-button"
+            [attr.aria-label]="isSidebarOpen ? 'Close menu' : 'Open menu'">
+      <mat-icon>{{ isSidebarOpen ? 'menu_open' : 'menu' }}</mat-icon>
     </button>
+  </div>
+
+  <!-- Site Title - CENTERED -->
+  <div class="site-title">
+    <h1 class="title-text">E-Commerce Site</h1>
   </div>
 
   <!-- Shopping Cart Icon -->
   <div class="cart-section">
-    <button mat-icon-button (click)="toggleCart()" class="cart-button" [attr.aria-label]="'Shopping cart with ' + cartCount() + ' items'">
-      <mat-icon [matBadge]="cartCount()" [matBadgeHidden]="cartCount() === 0" matBadgeColor="accent" matBadgeSize="small" aria-hidden="false">
+    <button mat-icon-button 
+            (click)="toggleCart()"
+            class="cart-button"
+            [attr.aria-label]="'Shopping cart with ' + cartCount() + ' items'">
+      <mat-icon 
+        [matBadge]="cartCount()" 
+        [matBadgeHidden]="cartCount() === 0"
+        matBadgeColor="accent"
+        matBadgeSize="small"
+        aria-hidden="false">
         shopping_cart
       </mat-icon>
     </button>
   </div>
 
-  <!-- Site Title -->
-  <div class="site-title">
-    <h1 class="title-text">E-Commerce Site</h1>
+  <!-- Checkout Button - FAR RIGHT -->
+  <div class="checkout-section">
+    <button mat-raised-button 
+            color="accent" 
+            (click)="navigateToCheckout()"
+            class="checkout-button">
+      Checkout
+    </button>
   </div>
 
-  <!-- Checkout Button -->
-  <div class="checkout-section">
-    <button mat-raised-button color="accent" (click)="navigateToCheckOut()" class="checkout-button">Checkout</button>
-  </div>
+  <!-- Sidebar Component -->
+  <app-sidebar-menu
+    [isOpen]="isSidebarOpen"
+    [currentRoute]="currentRoute"
+    (closeSidebar)="closeSidebar()"
+    (addProduct)="openProductForm()">
+  </app-sidebar-menu>
 
   <!-- Cart Popup Overlay -->
   <div class="cart-overlay" *ngIf="isCartOpen" (click)="closeCart()">
@@ -32,7 +58,7 @@
     </div>
   </div>
 
-  <!-- Product Form Popup Overlay - NEW -->
+  <!-- Product Form Popup Overlay -->
   <div class="product-form-overlay" *ngIf="isProductFormOpen" (click)="closeProductForm()">
     <div class="product-form-container" (click)="preventClose($event)">
       <app-product-form-popup (closeForm)="closeProductForm()"></app-product-form-popup>
