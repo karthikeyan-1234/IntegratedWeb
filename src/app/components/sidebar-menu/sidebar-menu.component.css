@@ -76,6 +76,10 @@
 
 .sidebar-item {
   margin-bottom: 4px;
+  text-align: left;
+  padding-left: 2px;
+  justify-content: flex-start;
+  justify-items: flex-start;
 }
 
 .sidebar-link {

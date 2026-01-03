@@ -22,7 +22,7 @@
       <ul class="sidebar-list">
         <li class="sidebar-item">
           <a mat-button 
-             routerLink="/"
+             routerLink="/products"
              (click)="onCloseSidebar()"
              class="sidebar-link"
              [class.active]="isActiveRoute('/')">
@@ -31,12 +31,12 @@
           </a>
         </li>
         <li class="sidebar-item">
-          <button mat-button 
-                  (click)="onAddProduct(); onCloseSidebar()"
-                  class="sidebar-link">
+          <a mat-button 
+                (click)="onAddProduct(); onCloseSidebar()"
+                class="sidebar-link">
             <mat-icon class="item-icon">add_circle</mat-icon>
             <span class="item-text">Add New Product</span>
-          </button>
+          </a>
         </li>
       </ul>
     </div>
