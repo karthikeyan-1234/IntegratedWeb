@@ -43,6 +43,12 @@
     </button>
   </div>
 
+      <!--Log Out button-->
+    <button class="username-container" (click)="logOut()">
+      <span class="username-text">{{ username }}</span>
+      <mat-icon>exit_to_app</mat-icon>
+    </button>
+
   <!-- Sidebar Component -->
   <app-sidebar-menu
     [isOpen]="isSidebarOpen"

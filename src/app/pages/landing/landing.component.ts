@@ -10,6 +10,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { TestSignalService } from '../../services/test-signal.service';
 
 @Component({
   selector: 'app-landing',
@@ -22,9 +23,11 @@ export class LandingComponent {
   products: Signal<Product[]>
   cartItems: Signal<CartItem[]>
 
-  constructor(private landingService:LandingService, private cartService:CartService, private router:Router){
+  constructor(private landingService:LandingService, private cartService:CartService, private router:Router, private testService:TestSignalService){
     this.products = this.landingService.getProducts()
     this.cartItems = this.cartService.getCartItems()
+
+    
   }
 
   isProductInCart(productId: number):boolean{

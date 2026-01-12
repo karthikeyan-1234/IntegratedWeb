@@ -15,6 +15,8 @@ import { CartPopupComponent } from '../cart-popup/cart-popup.component';
 import { ProductFormPopupComponent } from '../product-form-popup/product-form-popup.component';
 import { SidebarMenuComponent } from '../sidebar-menu/sidebar-menu.component'; // NEW
 
+import { AuthService } from '../../services/auth.service';
+
 @Component({
   selector: 'app-header',
   standalone: true, // Changed from imports to standalone
@@ -33,9 +35,11 @@ import { SidebarMenuComponent } from '../sidebar-menu/sidebar-menu.component'; /
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
+
   // Services
   private cartService = inject(CartService);
   private router = inject(Router);
+  private authService = inject(AuthService);
 
   // Cart Data
   cartCount: Signal<number>;
@@ -45,8 +49,15 @@ export class HeaderComponent {
   isProductFormOpen = false;
   isSidebarOpen = false;
   currentRoute = '';
+  username!: string|null;
+
 
   constructor() {
+
+    this.authService.loadUserProfile().then(res => {
+      this.username = res.username;
+    })
+
     this.cartCount = this.cartService.cartCount;
     
     this.router.events
@@ -104,6 +115,10 @@ export class HeaderComponent {
     this.isCartOpen = false;
     this.isProductFormOpen = false;
     this.isSidebarOpen = false;
+  }
+
+  logOut() {
+    this.authService.logout();
   }
 
   // Window resize listener
