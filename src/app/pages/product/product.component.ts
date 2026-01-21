@@ -7,6 +7,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInput } from "@angular/material/input";
 import { FormsModule } from '@angular/forms';
+import swal from 'sweetalert2'
 
 @Component({
   selector: 'app-product',
@@ -27,6 +28,18 @@ export class ProductComponent {
       this.products = products;
 
       this.dataSource = new MatTableDataSource<Product>(products);
+    },error => {
+
+      console.log("Printing error:")
+
+
+      console.log(error.error)
+
+      swal.fire({
+        title:error.error.title,
+        text: error.error.detail
+      })
+
     })
   }
 
@@ -38,6 +51,27 @@ export class ProductComponent {
     saveProduct(element: Product){
     console.log(element);
     this.editedId = -1;
+  }
+
+  deleteProduct(element:Product){
+    swal.fire({
+      title: 'Do you want to delete ' + element.name + '?',
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      denyButtonText: 'No',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.productService.deleteProduct(element).subscribe(res => {
+        swal.fire("Deleted..!!","Product deleted..!")
+      },err => {
+        swal.fire({
+          title: "Delete failed..!",
+          text: "Unable to delete product"
+        })
+      })
+      }
+    })    
   }
 
   cancelEdit(){

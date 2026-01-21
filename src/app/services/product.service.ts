@@ -19,4 +19,8 @@ export class ProductService {
   addProduct(newProduct: Product):Observable<Product>{
     return this.http.post<Product>(environment.apiBaseUrl + "/Product/AddProductAsync", newProduct)
   }
+
+  deleteProduct(product:Product):Observable<any>{
+    return this.http.delete<any>(environment.apiBaseUrl + '/Product/DeleteProductAsync/' + product.id.toString())
+  }
 }
