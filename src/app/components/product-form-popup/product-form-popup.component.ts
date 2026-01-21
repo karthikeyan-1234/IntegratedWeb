@@ -1,5 +1,5 @@
 import { Component, inject, Output, EventEmitter } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { LandingService } from '../../services/landing.service';
 import { Product } from '../../models/product.model';
@@ -15,14 +15,7 @@ import { ProductService } from '../../services/product.service';
 
 @Component({
   selector: 'app-product-form-popup',
-  imports: [CommonModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
-    MatCardModule,
-    MatDividerModule],
+  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule, MatCardModule, MatDividerModule],
   templateUrl: './product-form-popup.component.html',
   styleUrl: './product-form-popup.component.css'
 })

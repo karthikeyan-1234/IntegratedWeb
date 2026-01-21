@@ -1,69 +1,76 @@
 <mat-card class="cart-popup-card">
-    <mat-card-header>
-        <mat-card-title>Shopping Cart</mat-card-title>
-        <!-- cart items count -->
-        <mat-card-subtitle>
-            {{ cartItems().length }} item{{ cartItems().length !== 1 ? 's' : '' }} in cart
-        </mat-card-subtitle>
-    </mat-card-header>
+  <mat-card-header>
+    <mat-card-title>Shopping Cart</mat-card-title>
+    <!-- cart items count -->
+    <mat-card-subtitle>
+      {{ cartItems().length }} item{{ cartItems().length !== 1 ? 's' : '' }} in cart
+    </mat-card-subtitle>
+  </mat-card-header>
 
+  <mat-divider></mat-divider>
+
+  <mat-card-content class="cart-content">
+    <!-- Display if the cart is empty -->
+    @if (isEmptyCart()) {
+      <div class="empty-cart">
+        <mat-icon class="empty-cart-icon">shopping_cart</mat-icon>
+        <p>Your cart is empty..!!</p>
+      </div>
+    }
+
+    <!-- Display cart items when not empty -->
+    @if (!isEmptyCart()) {
+      <mat-list class="cart-items-list">
+        @for (item of cartItems(); track item) {
+          <mat-list-item class="cart-item">
+            <!-- Item name and price -->
+            <div matListItemTitle class="item-header">
+              <span class="item-name">{{ item.product.name }}</span>
+              <span class="item-price">{{ item.product.price | currency }}</span>
+            </div>
+            <!-- Quantity controls and remove button -->
+            <div matListItemLine class="item-actions">
+              <div class="quantity-section">
+                <span class="quantity-label">Qty: </span>
+                <button mat-icon-button
+                  (click)="decreaseQuantity(item.product.id)"
+                  [disabled]="item.quantity <= 1">
+                  <mat-icon>remove</mat-icon>
+                </button>
+                <span class="quantity-value">{{ item.quantity }}</span>
+                <button mat-icon-button
+                  (click)="increaseQuantity(item.product.id)">
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+              <button mat-icon-button
+                color="warn"
+                (click)="removeItem(item.product.id)"
+                aria-label="Remove item from cart">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+            <!-- Line total -->
+            <div matListItemLine class="item-total">
+              Line Total: {{ getLineTotal(item) | currency }}
+            </div>
+          </mat-list-item>
+        }
+      </mat-list>
+    }
+  </mat-card-content>
+
+  <!-- Cart total section -->
+  @if (!isEmptyCart()) {
     <mat-divider></mat-divider>
+  }
 
-    <mat-card-content class="cart-content">
-        <!-- Display if the cart is empty -->
-        <div *ngIf="isEmptyCart()" class="empty-cart">
-            <mat-icon class="empty-cart-icon">shopping_cart</mat-icon>
-            <p>Your cart is empty..!!</p>
-        </div>
-
-        <!-- Display cart items when not empty -->
-        <mat-list *ngIf="!isEmptyCart()" class="cart-items-list">
-            <mat-list-item *ngFor="let item of cartItems()" class="cart-item">
-                <!-- Item name and price -->
-                <div matListItemTitle class="item-header">
-                    <span class="item-name">{{ item.product.name }}</span>
-                    <span class="item-price">{{ item.product.price | currency }}</span>
-                </div>
-                
-                <!-- Quantity controls and remove button -->
-                <div matListItemLine class="item-actions">
-                    <div class="quantity-section">
-                        <span class="quantity-label">Qty: </span>
-                        <button mat-icon-button 
-                                (click)="decreaseQuantity(item.product.id)"
-                                [disabled]="item.quantity <= 1">
-                            <mat-icon>remove</mat-icon>
-                        </button>
-                        <span class="quantity-value">{{ item.quantity }}</span>
-                        <button mat-icon-button 
-                                (click)="increaseQuantity(item.product.id)">
-                            <mat-icon>add</mat-icon>
-                        </button>
-                    </div>
-                    
-                    <button mat-icon-button 
-                            color="warn" 
-                            (click)="removeItem(item.product.id)"
-                            aria-label="Remove item from cart">
-                        <mat-icon>delete</mat-icon>
-                    </button>
-                </div>
-
-                <!-- Line total -->
-                <div matListItemLine class="item-total">
-                    Line Total: {{ getLineTotal(item) | currency }}
-                </div>
-            </mat-list-item>
-        </mat-list>
-    </mat-card-content>
-
-    <!-- Cart total section -->
-    <mat-divider *ngIf="!isEmptyCart()"></mat-divider>
-    
-    <mat-card-actions *ngIf="!isEmptyCart()" class="cart-actions">
-        <div class="total-section">
-            <span class="total-label">Cart Total:</span>
-            <span class="total-value">{{ cartTotal() | currency }}</span>
-        </div>
+  @if (!isEmptyCart()) {
+    <mat-card-actions class="cart-actions">
+      <div class="total-section">
+        <span class="total-label">Cart Total:</span>
+        <span class="total-value">{{ cartTotal() | currency }}</span>
+      </div>
     </mat-card-actions>
+  }
 </mat-card>

@@ -1,7 +1,7 @@
 <div class="table-container">
   <div class="table-scroll-container">
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z1">
-      
+
       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef>ID</th>
         <td mat-cell *matCellDef="let element">{{element.id}}</td>
@@ -10,36 +10,33 @@
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef>Name</th>
         <td mat-cell *matCellDef="let element">
-          <ng-container *ngIf="element.id == editedId; else displayName">
+          @if (element.id == editedId) {
             <input matInput [(ngModel)]="element.name" />
-          </ng-container>
-          <ng-template #displayName>
+          } @else {
             {{element.name}}
-          </ng-template>
+          }
         </td>
       </ng-container>
 
       <ng-container matColumnDef="price">
         <th mat-header-cell *matHeaderCellDef>Price</th>
         <td mat-cell *matCellDef="let element">
-          <ng-container *ngIf="element.id == editedId; else displayCurr">
+          @if (element.id == editedId) {
             <input matInput [(ngModel)]="element.price" />
-          </ng-container>
-          <ng-template #displayCurr>
+          } @else {
             {{element.price | currency}}
-          </ng-template>
+          }
         </td>
       </ng-container>
 
       <ng-container matColumnDef="description">
         <th mat-header-cell *matHeaderCellDef>Description</th>
         <td mat-cell *matCellDef="let element">
-          <ng-container *ngIf="element.id == editedId; else displaydesc">
+          @if (element.id == editedId) {
             <input matInput [(ngModel)]="element.description" />
-          </ng-container>
-          <ng-template #displaydesc>
+          } @else {
             {{element.description || '-'}}
-          </ng-template>
+          }
         </td>
       </ng-container>
 
@@ -49,53 +46,48 @@
         <td mat-cell *matCellDef="let element" class="actions-cell">
           <div class="action-buttons">
 
-            <ng-container *ngIf="element.id != editedId;else saveSection">
-            
-            <!-- Edit Button -->
-            <button mat-icon-button class="edit-button" (click)="editProduct(element)"
-                    aria-label="Edit product"
-                    matTooltip="Edit">
-              <mat-icon>edit</mat-icon>
-            </button>
-            
-            <!-- Delete Button -->
-            <button mat-icon-button class="delete-button" (click)="deleteProduct(element)"
-                    aria-label="Delete product"
-                    matTooltip="Delete">
-              <mat-icon>delete</mat-icon>
-            </button>
-
-            </ng-container>
-
-            <ng-template #saveSection>
+            @if (element.id != editedId) {
+              <!-- Edit Button -->
+              <button mat-icon-button class="edit-button" (click)="editProduct(element)"
+                aria-label="Edit product"
+                matTooltip="Edit">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <!-- Delete Button -->
+              <button mat-icon-button class="delete-button" (click)="deleteProduct(element)"
+                aria-label="Delete product"
+                matTooltip="Delete">
+                <mat-icon>delete</mat-icon>
+              </button>
+            } @else {
               <!-- Save Button -->
               <button mat-icon-button class="edit-button" (click)="saveProduct(element)"
-                      aria-label="Save product"
-                      matTooltip="Save">
+                aria-label="Save product"
+                matTooltip="Save">
                 <mat-icon>save</mat-icon>
               </button>
-              
               <!-- Cancel Button -->
               <button mat-icon-button class="delete-button" (click)="cancelEdit()"
-                      aria-label="Cancel Edit"
-                      matTooltip="Cancel">
+                aria-label="Cancel Edit"
+                matTooltip="Cancel">
                 <mat-icon>cancel</mat-icon>
               </button>
-            </ng-template>
+            }
+
           </div>
         </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayCols"></tr>
       <tr mat-row *matRowDef="let row; columns: displayCols"></tr>
-      
+
       <!-- Empty State Row -->
       <tr *matNoDataRow>
         <td class="no-data-cell" [attr.colspan]="displayCols.length">
           No products found. Add your first product!
         </td>
       </tr>
-      
+
     </table>
   </div>
 </div>

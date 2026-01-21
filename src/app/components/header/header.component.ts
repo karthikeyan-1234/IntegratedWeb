@@ -1,5 +1,5 @@
 import { Component, HostListener, Signal, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router, RouterModule, NavigationEnd } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
@@ -21,7 +21,6 @@ import { AuthService } from '../../services/auth.service';
   selector: 'app-header',
   standalone: true, // Changed from imports to standalone
   imports: [
-    CommonModule,
     MatToolbarModule,
     MatButtonModule,
     MatBadgeModule,
@@ -29,8 +28,8 @@ import { AuthService } from '../../services/auth.service';
     RouterModule,
     CartPopupComponent,
     ProductFormPopupComponent,
-    SidebarMenuComponent // NEW
-  ],
+    SidebarMenuComponent
+],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })

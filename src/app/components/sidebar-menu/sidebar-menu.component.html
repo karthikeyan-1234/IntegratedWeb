@@ -1,14 +1,16 @@
 <!-- Sidebar Overlay -->
-<div class="sidebar-overlay" *ngIf="isOpen" (click)="onCloseSidebar()"></div>
+@if (isOpen) {
+  <div class="sidebar-overlay" (click)="onCloseSidebar()"></div>
+}
 
 <!-- Sidebar Menu -->
 <nav class="sidebar-menu" [class.open]="isOpen">
   <div class="sidebar-header">
     <h2 class="sidebar-title">Menu</h2>
-    <button mat-icon-button 
-            (click)="onCloseSidebar()"
-            class="sidebar-close-btn"
-            aria-label="Close menu">
+    <button mat-icon-button
+      (click)="onCloseSidebar()"
+      class="sidebar-close-btn"
+      aria-label="Close menu">
       <mat-icon>close</mat-icon>
     </button>
   </div>
@@ -21,19 +23,19 @@
       <h3 class="section-title">Products</h3>
       <ul class="sidebar-list">
         <li class="sidebar-item">
-          <a mat-button 
-             routerLink="/products"
-             (click)="onCloseSidebar()"
-             class="sidebar-link"
-             [class.active]="isActiveRoute('/')">
+          <a mat-button
+            routerLink="/products"
+            (click)="onCloseSidebar()"
+            class="sidebar-link"
+            [class.active]="isActiveRoute('/')">
             <mat-icon class="item-icon">storefront</mat-icon>
             <span class="item-text">All Products</span>
           </a>
         </li>
         <li class="sidebar-item">
-          <a mat-button 
-                (click)="onAddProduct(); onCloseSidebar()"
-                class="sidebar-link">
+          <a mat-button
+            (click)="onAddProduct(); onCloseSidebar()"
+            class="sidebar-link">
             <mat-icon class="item-icon">add_circle</mat-icon>
             <span class="item-text">Add New Product</span>
           </a>

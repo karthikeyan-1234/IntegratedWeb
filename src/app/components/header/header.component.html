@@ -1,12 +1,12 @@
 <!-- Header Toolbar -->
 <mat-toolbar color="primary" class="header-toolbar">
-  
+
   <!-- Sidebar Toggle Button -->
   <div class="sidebar-toggle-section">
-    <button mat-icon-button 
-            (click)="toggleSidebar()"
-            class="sidebar-toggle-button"
-            [attr.aria-label]="isSidebarOpen ? 'Close menu' : 'Open menu'">
+    <button mat-icon-button
+      (click)="toggleSidebar()"
+      class="sidebar-toggle-button"
+      [attr.aria-label]="isSidebarOpen ? 'Close menu' : 'Open menu'">
       <mat-icon>{{ isSidebarOpen ? 'menu_open' : 'menu' }}</mat-icon>
     </button>
   </div>
@@ -18,12 +18,12 @@
 
   <!-- Shopping Cart Icon -->
   <div class="cart-section">
-    <button mat-icon-button 
-            (click)="toggleCart()"
-            class="cart-button"
-            [attr.aria-label]="'Shopping cart with ' + cartCount() + ' items'">
-      <mat-icon 
-        [matBadge]="cartCount()" 
+    <button mat-icon-button
+      (click)="toggleCart()"
+      class="cart-button"
+      [attr.aria-label]="'Shopping cart with ' + cartCount() + ' items'">
+      <mat-icon
+        [matBadge]="cartCount()"
         [matBadgeHidden]="cartCount() === 0"
         matBadgeColor="accent"
         matBadgeSize="small"
@@ -35,19 +35,19 @@
 
   <!-- Checkout Button - FAR RIGHT -->
   <div class="checkout-section">
-    <button mat-raised-button 
-            color="accent" 
-            (click)="navigateToCheckout()"
-            class="checkout-button">
+    <button mat-raised-button
+      color="accent"
+      (click)="navigateToCheckout()"
+      class="checkout-button">
       Checkout
     </button>
   </div>
 
-      <!--Log Out button-->
-    <button class="username-container" (click)="logOut()">
-      <span class="username-text">{{ username }}</span>
-      <mat-icon>exit_to_app</mat-icon>
-    </button>
+  <!--Log Out button-->
+  <button class="username-container" (click)="logOut()">
+    <span class="username-text">{{ username }}</span>
+    <mat-icon>exit_to_app</mat-icon>
+  </button>
 
   <!-- Sidebar Component -->
   <app-sidebar-menu
@@ -58,16 +58,20 @@
   </app-sidebar-menu>
 
   <!-- Cart Popup Overlay -->
-  <div class="cart-overlay" *ngIf="isCartOpen" (click)="closeCart()">
-    <div class="cart-popup-container" (click)="preventClose($event)">
-      <app-cart-popup></app-cart-popup>
+  @if (isCartOpen) {
+    <div class="cart-overlay" (click)="closeCart()">
+      <div class="cart-popup-container" (click)="preventClose($event)">
+        <app-cart-popup></app-cart-popup>
+      </div>
     </div>
-  </div>
+  }
 
   <!-- Product Form Popup Overlay -->
-  <div class="product-form-overlay" *ngIf="isProductFormOpen" (click)="closeProductForm()">
-    <div class="product-form-container" (click)="preventClose($event)">
-      <app-product-form-popup (closeForm)="closeProductForm()"></app-product-form-popup>
+  @if (isProductFormOpen) {
+    <div class="product-form-overlay" (click)="closeProductForm()">
+      <div class="product-form-container" (click)="preventClose($event)">
+        <app-product-form-popup (closeForm)="closeProductForm()"></app-product-form-popup>
+      </div>
     </div>
-  </div>
+  }
 </mat-toolbar>

@@ -1,52 +1,46 @@
 <div class="products-grid-css">
-    
-    <!-- Product card for each product -->
-    <div *ngFor="let product of products()" class="product-item">
-      
+
+  <!-- Product card for each product -->
+  @for (product of products(); track product) {
+    <div class="product-item">
       <mat-card class="product-card">
-        
         <div class="product-image-container">
-          <img 
-            [src]="product.image" 
+          <img
+            [src]="product.image"
             [alt]="product.name"
             class="product-image"
             (error)="product.image = 'images/placeholder.jpg'">
-        </div>
-
-        <mat-card-content class="product-content">
-          
-          <div class="product-info">
-            <h3 class="product-name">{{ product.name }}</h3>
-            <p class="product-price">{{ product.price | currency }}</p>
           </div>
-
-          <p *ngIf="product.description" class="product-description">
-            {{ product.description }}
-          </p>
-
-        </mat-card-content>
-
-        <mat-card-actions class="product-actions">
-          
-          <div *ngIf="isProductInCart(product.id)" class="quantity-display">
-            <span class="quantity-label">In cart: </span>
-            <span class="quantity-value">{{ getProductQuantity(product.id) }}</span>
-          </div>
-
-          <button 
-            mat-raised-button 
-            [color]="getCartButtonColor(product.id)"
-            (click)="toggleCart(product)"
-            [matTooltip]="getCartToolTip(product.id)"
-            class="cart-action-button"
-            [attr.aria-label]="getCartToolTip(product.id)">
-            
-            <mat-icon class="action-icon">{{ getCartIcon(product.id) }}</mat-icon>
-            {{ isProductInCart(product.id) ? 'Remove' : 'Add to Cart' }}
-          </button>
-
-        </mat-card-actions>
-
-      </mat-card>
-    </div>
+          <mat-card-content class="product-content">
+            <div class="product-info">
+              <h3 class="product-name">{{ product.name }}</h3>
+              <p class="product-price">{{ product.price | currency }}</p>
+            </div>
+            @if (product.description) {
+              <p class="product-description">
+                {{ product.description }}
+              </p>
+            }
+          </mat-card-content>
+          <mat-card-actions class="product-actions">
+            @if (isProductInCart(product.id)) {
+              <div class="quantity-display">
+                <span class="quantity-label">In cart: </span>
+                <span class="quantity-value">{{ getProductQuantity(product.id) }}</span>
+              </div>
+            }
+            <button
+              mat-raised-button
+              [color]="getCartButtonColor(product.id)"
+              (click)="toggleCart(product)"
+              [matTooltip]="getCartToolTip(product.id)"
+              class="cart-action-button"
+              [attr.aria-label]="getCartToolTip(product.id)">
+              <mat-icon class="action-icon">{{ getCartIcon(product.id) }}</mat-icon>
+              {{ isProductInCart(product.id) ? 'Remove' : 'Add to Cart' }}
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    }
   </div>

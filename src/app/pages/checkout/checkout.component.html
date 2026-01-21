@@ -1,5 +1,5 @@
 <div class="checkout-container">
-  
+
   <!-- Page Header -->
   <div class="page-header">
     <h1 class="page-title">Checkout</h1>
@@ -7,220 +7,224 @@
   </div>
 
   <!-- Empty Cart State -->
-  <div *ngIf="isEmptyCart()" class="empty-cart">
-    <mat-icon class="empty-icon">shopping_cart</mat-icon>
-    <h2>Your cart is empty</h2>
-    <p>Add some products to your cart before checking out</p>
-    <button 
-      mat-raised-button 
-      color="primary" 
-      (click)="continueShopping()"
-      class="continue-shopping-btn">
-      <mat-icon>shopping_basket</mat-icon>
-      Continue Shopping
-    </button>
-  </div>
+  @if (isEmptyCart()) {
+    <div class="empty-cart">
+      <mat-icon class="empty-icon">shopping_cart</mat-icon>
+      <h2>Your cart is empty</h2>
+      <p>Add some products to your cart before checking out</p>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="continueShopping()"
+        class="continue-shopping-btn">
+        <mat-icon>shopping_basket</mat-icon>
+        Continue Shopping
+      </button>
+    </div>
+  }
 
   <!-- Checkout Content -->
-  <div *ngIf="!isEmptyCart()" class="checkout-content">
-    
-    <!-- Order Summary Card -->
-    <mat-card class="order-summary-card">
-      <mat-card-header>
-        <mat-card-title>Order Summary</mat-card-title>
-        <mat-card-subtitle>
-          {{ cartItems().length }} item{{ cartItems().length !== 1 ? 's' : '' }} in your cart
-        </mat-card-subtitle>
-      </mat-card-header>
-
-      <mat-divider></mat-divider>
-
-      <mat-card-content class="order-content">
-        
-        <!-- Cart Items List -->
-        <mat-list class="cart-items-list">
-          <mat-list-item *ngFor="let item of cartItems()" class="cart-item">
-            
-            <!-- Product Image and Name -->
-            <div matListItemTitle class="product-info">
-              <img 
-                [src]="item.product.image" 
-                [alt]="item.product.name"
-                class="product-image">
-              <div class="product-details">
-                <h3 class="product-name">{{ item.product.name }}</h3>
-                <p class="unit-price">{{ item.product.price | currency }} each</p>
-              </div>
-            </div>
-
-            <!-- Quantity Controls -->
-            <div matListItemLine class="quantity-section">
-              <span class="quantity-label">Quantity:</span>
-              <div class="quantity-controls">
-                <button 
-                  mat-icon-button 
-                  (click)="decreaseQuantity(item.product.id)"
-                  [disabled]="item.quantity <= 1 || isLoading">
-                  <mat-icon>remove</mat-icon>
-                </button>
-                <span class="quantity-value">{{ item.quantity }}</span>
-                <button 
-                  mat-icon-button 
-                  (click)="increaseQuantity(item.product.id)"
-                  [disabled]="isLoading">
-                  <mat-icon>add</mat-icon>
-                </button>
-              </div>
-            </div>
-
-            <!-- Line Total and Remove Button -->
-            <div matListItemLine class="item-total-section">
-              <span class="line-total">
-                {{ getLineTotal(item) | currency }}
-              </span>
-              <button 
-                mat-icon-button 
-                color="warn" 
-                (click)="removeItem(item.product.id)"
-                [disabled]="isLoading"
-                aria-label="Remove item">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </div>
-
-          </mat-list-item>
-        </mat-list>
-
-      </mat-card-content>
-
-      <mat-divider></mat-divider>
-
-      <!-- Order Total -->
-      <mat-card-actions class="order-actions">
-        <div class="total-section">
-          <div class="total-line">
-            <span class="total-label">Subtotal:</span>
-            <span class="total-value">{{ cartTotal() | currency }}</span>
-          </div>
-          <div class="total-line">
-            <span class="total-label">Shipping:</span>
-            <span class="total-value">Free</span>
-          </div>
+  @if (!isEmptyCart()) {
+    <div class="checkout-content">
+      <!-- Order Summary Card -->
+      <mat-card class="order-summary-card">
+        <mat-card-header>
+          <mat-card-title>Order Summary</mat-card-title>
+          <mat-card-subtitle>
+            {{ cartItems().length }} item{{ cartItems().length !== 1 ? 's' : '' }} in your cart
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-divider></mat-divider>
+        <mat-card-content class="order-content">
+          <!-- Cart Items List -->
+          <mat-list class="cart-items-list">
+            @for (item of cartItems(); track item) {
+              <mat-list-item class="cart-item">
+                <!-- Product Image and Name -->
+                <div matListItemTitle class="product-info">
+                  <img
+                    [src]="item.product.image"
+                    [alt]="item.product.name"
+                    class="product-image">
+                    <div class="product-details">
+                      <h3 class="product-name">{{ item.product.name }}</h3>
+                      <p class="unit-price">{{ item.product.price | currency }} each</p>
+                    </div>
+                  </div>
+                  <!-- Quantity Controls -->
+                  <div matListItemLine class="quantity-section">
+                    <span class="quantity-label">Quantity:</span>
+                    <div class="quantity-controls">
+                      <button
+                        mat-icon-button
+                        (click)="decreaseQuantity(item.product.id)"
+                        [disabled]="item.quantity <= 1 || isLoading">
+                        <mat-icon>remove</mat-icon>
+                      </button>
+                      <span class="quantity-value">{{ item.quantity }}</span>
+                      <button
+                        mat-icon-button
+                        (click)="increaseQuantity(item.product.id)"
+                        [disabled]="isLoading">
+                        <mat-icon>add</mat-icon>
+                      </button>
+                    </div>
+                  </div>
+                  <!-- Line Total and Remove Button -->
+                  <div matListItemLine class="item-total-section">
+                    <span class="line-total">
+                      {{ getLineTotal(item) | currency }}
+                    </span>
+                    <button
+                      mat-icon-button
+                      color="warn"
+                      (click)="removeItem(item.product.id)"
+                      [disabled]="isLoading"
+                      aria-label="Remove item">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </mat-list-item>
+              }
+            </mat-list>
+          </mat-card-content>
           <mat-divider></mat-divider>
-          <div class="total-line final-total">
-            <span class="total-label">Total:</span>
-            <span class="total-value">{{ cartTotal() | currency:'INR' }}</span>
-          </div>
-        </div>
-      </mat-card-actions>
-    </mat-card>
-
-    <!-- Payment Section -->
-    <mat-card class="payment-card">
-      <mat-card-header>
-        <mat-card-title>Payment Details</mat-card-title>
-        <mat-card-subtitle>
-          {{ 
-            !showPaymentForm ? 'Click "Pay" to initialize payment' : 
-            paymentCompleted ? 'Payment completed successfully' : 'Enter your payment details'
-          }}
-        </mat-card-subtitle>
-      </mat-card-header>
-
-      <mat-divider></mat-divider>
-
-      <mat-card-content class="payment-content">
-        
-        <!-- Payment Status Messages -->
-        <div *ngIf="paymentInitializing" class="payment-status processing">
-          <mat-icon class="status-icon spinner">hourglass_empty</mat-icon>
-          <span class="status-message">Creating secure payment session...</span>
-        </div>
-
-        <div *ngIf="paymentStatus === 'processing'" class="payment-status processing">
-          <mat-icon class="status-icon spinner">hourglass_empty</mat-icon>
-          <span class="status-message">Processing your payment. Please wait...</span>
-        </div>
-
-        <!-- Payment Element Container - ALWAYS VISIBLE -->
-        <div class="payment-element-container" [class.hidden]="!showPaymentForm || paymentCompleted">
-          <div id="payment-element">
-            <!-- Initial placeholder -->
-            <div *ngIf="!showPaymentForm && !paymentInitializing" class="payment-placeholder">
-              <mat-icon class="placeholder-icon">credit_card</mat-icon>
-              <p>Payment form will appear here after clicking "Pay"</p>
+          <!-- Order Total -->
+          <mat-card-actions class="order-actions">
+            <div class="total-section">
+              <div class="total-line">
+                <span class="total-label">Subtotal:</span>
+                <span class="total-value">{{ cartTotal() | currency }}</span>
+              </div>
+              <div class="total-line">
+                <span class="total-label">Shipping:</span>
+                <span class="total-value">Free</span>
+              </div>
+              <mat-divider></mat-divider>
+              <div class="total-line final-total">
+                <span class="total-label">Total:</span>
+                <span class="total-value">{{ cartTotal() | currency:'INR' }}</span>
+              </div>
             </div>
-          </div>
-        </div>
-
-        <!-- Payment Instructions -->
-        <div *ngIf="showPaymentForm && !paymentCompleted" class="payment-instructions">
-          <mat-icon>info</mat-icon>
-          <span>Enter your card details above and click "Confirm Payment" below</span>
-        </div>
-
-        <!-- Payment Errors -->
-        <div *ngIf="paymentError" class="payment-error">
-          <mat-icon class="error-icon">error</mat-icon>
-          <span class="error-message">{{ paymentError }}</span>
-          
-          <button 
-            *ngIf="paymentError && !isLoading && !paymentInitializing"
-            mat-stroked-button 
-            color="primary"
-            (click)="retryPayment()"
-            class="retry-btn">
-            <mat-icon>refresh</mat-icon>
-            Try Again
-          </button>
-        </div>
-
-        <!-- Payment Success -->
-        <div *ngIf="paymentCompleted" class="payment-success">
-          <mat-icon class="success-icon">check_circle</mat-icon>
-          <h3>Payment Successful!</h3>
-          <p>Your order has been confirmed. You will receive an email confirmation shortly.</p>
-          <p class="order-id">Order ID: {{ orderId }}</p>
-        </div>
-
-      </mat-card-content>
-
-      <mat-divider></mat-divider>
-
-      <!-- Action Buttons -->
-      <mat-card-actions class="payment-actions">
-        <button 
-          mat-stroked-button 
-          (click)="continueShopping()"
-          [disabled]="isLoading || paymentInitializing"
-          class="continue-btn">
-          <mat-icon>arrow_back</mat-icon>
-          Continue Shopping
-        </button>
-        
-        <!-- Pay/Confirm Payment Button -->
-        <button 
-          mat-raised-button 
-          color="primary" 
-          (click)="handlePaymentSubmit()"
-          [disabled]="isLoading || paymentInitializing || paymentCompleted"
-          class="pay-button">
-          <mat-icon *ngIf="!isLoading && !paymentInitializing">
-            {{ showPaymentForm ? 'check_circle' : 'payment' }}
-          </mat-icon>
-          <mat-icon *ngIf="isLoading || paymentInitializing" class="spinner">hourglass_empty</mat-icon>
-          
-          <span *ngIf="paymentInitializing">Initializing Payment...</span>
-          <span *ngIf="!paymentInitializing && !isLoading && !showPaymentForm">
-            Pay {{ cartTotal() | currency:'INR' }}
-          </span>
-          <span *ngIf="!paymentInitializing && !isLoading && showPaymentForm">
-            Confirm Payment
-          </span>
-          <span *ngIf="isLoading && !paymentInitializing">Processing...</span>
-        </button>
-      </mat-card-actions>
-    </mat-card>
-
+          </mat-card-actions>
+        </mat-card>
+        <!-- Payment Section -->
+        <mat-card class="payment-card">
+          <mat-card-header>
+            <mat-card-title>Payment Details</mat-card-title>
+            <mat-card-subtitle>
+              {{
+              !showPaymentForm ? 'Click "Pay" to initialize payment' :
+              paymentCompleted ? 'Payment completed successfully' : 'Enter your payment details'
+              }}
+            </mat-card-subtitle>
+          </mat-card-header>
+          <mat-divider></mat-divider>
+          <mat-card-content class="payment-content">
+            <!-- Payment Status Messages -->
+            @if (paymentInitializing) {
+              <div class="payment-status processing">
+                <mat-icon class="status-icon spinner">hourglass_empty</mat-icon>
+                <span class="status-message">Creating secure payment session...</span>
+              </div>
+            }
+            @if (paymentStatus === 'processing') {
+              <div class="payment-status processing">
+                <mat-icon class="status-icon spinner">hourglass_empty</mat-icon>
+                <span class="status-message">Processing your payment. Please wait...</span>
+              </div>
+            }
+            <!-- Payment Element Container - ALWAYS VISIBLE -->
+            <div class="payment-element-container" [class.hidden]="!showPaymentForm || paymentCompleted">
+              <div id="payment-element">
+                <!-- Initial placeholder -->
+                @if (!showPaymentForm && !paymentInitializing) {
+                  <div class="payment-placeholder">
+                    <mat-icon class="placeholder-icon">credit_card</mat-icon>
+                    <p>Payment form will appear here after clicking "Pay"</p>
+                  </div>
+                }
+              </div>
+            </div>
+            <!-- Payment Instructions -->
+            @if (showPaymentForm && !paymentCompleted) {
+              <div class="payment-instructions">
+                <mat-icon>info</mat-icon>
+                <span>Enter your card details above and click "Confirm Payment" below</span>
+              </div>
+            }
+            <!-- Payment Errors -->
+            @if (paymentError) {
+              <div class="payment-error">
+                <mat-icon class="error-icon">error</mat-icon>
+                <span class="error-message">{{ paymentError }}</span>
+                @if (paymentError && !isLoading && !paymentInitializing) {
+                  <button
+                    mat-stroked-button
+                    color="primary"
+                    (click)="retryPayment()"
+                    class="retry-btn">
+                    <mat-icon>refresh</mat-icon>
+                    Try Again
+                  </button>
+                }
+              </div>
+            }
+            <!-- Payment Success -->
+            @if (paymentCompleted) {
+              <div class="payment-success">
+                <mat-icon class="success-icon">check_circle</mat-icon>
+                <h3>Payment Successful!</h3>
+                <p>Your order has been confirmed. You will receive an email confirmation shortly.</p>
+                <p class="order-id">Order ID: {{ orderId }}</p>
+              </div>
+            }
+          </mat-card-content>
+          <mat-divider></mat-divider>
+          <!-- Action Buttons -->
+          <mat-card-actions class="payment-actions">
+            <button
+              mat-stroked-button
+              (click)="continueShopping()"
+              [disabled]="isLoading || paymentInitializing"
+              class="continue-btn">
+              <mat-icon>arrow_back</mat-icon>
+              Continue Shopping
+            </button>
+            <!-- Pay/Confirm Payment Button -->
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="handlePaymentSubmit()"
+              [disabled]="isLoading || paymentInitializing || paymentCompleted"
+              class="pay-button">
+              @if (!isLoading && !paymentInitializing) {
+                <mat-icon>
+                  {{ showPaymentForm ? 'check_circle' : 'payment' }}
+                </mat-icon>
+              }
+              @if (isLoading || paymentInitializing) {
+                <mat-icon class="spinner">hourglass_empty</mat-icon>
+              }
+              @if (paymentInitializing) {
+                <span>Initializing Payment...</span>
+              }
+              @if (!paymentInitializing && !isLoading && !showPaymentForm) {
+                <span>
+                  Pay {{ cartTotal() | currency:'INR' }}
+                </span>
+              }
+              @if (!paymentInitializing && !isLoading && showPaymentForm) {
+                <span>
+                  Confirm Payment
+                </span>
+              }
+              @if (isLoading && !paymentInitializing) {
+                <span>Processing...</span>
+              }
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    }
   </div>
-</div>
