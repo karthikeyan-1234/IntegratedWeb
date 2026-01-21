@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Inject, Injectable, signal } from '@angular/core';
 import { CartService } from './cart.service';
 import { CartItem } from '../models/cart-item.model';
 import { PaymentIntentCreateRequest } from '../models/PaymentIntentCreateRequest';
@@ -15,7 +15,7 @@ export class CheckoutService {
   cartItems = signal<CartItem[]>([])
   cartTotal: number = 0;
 
-  constructor(private cartService: CartService,private http:HttpClient) { 
+  constructor(private cartService: CartService,@Inject(HttpClient) private http:HttpClient) { 
       this.cartItems = this.cartService.getCartItems();
       this.cartTotal = this.cartService.cartTotal()
   }
