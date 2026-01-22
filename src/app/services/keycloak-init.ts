@@ -12,7 +12,7 @@ export function initializeKeycloak(keycloak: KeycloakService): () => Promise<voi
       },
       initOptions: {
         onLoad: 'login-required', //'check-sso',
-        checkLoginIframe: true, // Can enable for HTTPS
+        checkLoginIframe: false, // Can enable for HTTPS
         pkceMethod: 'S256', // Will work with HTTPS
         //silentCheckSsoRedirectUri: window.location.origin + '/assets/silent-check-sso.html'
       },
