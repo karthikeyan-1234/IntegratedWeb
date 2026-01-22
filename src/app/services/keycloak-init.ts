@@ -5,9 +5,9 @@ export function initializeKeycloak(keycloak: KeycloakService): () => Promise<voi
   return (): Promise<void> =>
     keycloak.init({
       config: {
-        url: 'http://localhost:8080',
+        url: 'http://keycloak.local/',
         realm: 'master',
-        clientId: 'angular-app',
+        clientId: 'angular-app'
       },
       initOptions: {
         onLoad: 'login-required', //'check-sso',
