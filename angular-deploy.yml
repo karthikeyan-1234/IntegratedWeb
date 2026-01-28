@@ -44,3 +44,29 @@ spec:
       port: 80
       targetPort: 80
       name: http
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: angular-web-ingress
+  namespace: default
+  annotations:
+    cert-manager.io/cluster-issuer: local-ca-cluster-issuer
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - kong-proxy.local
+    secretName: kong-proxy-tls
+  rules:
+  - host: kong-proxy.local
+    http:
+      paths:
+      - path: /web
+        pathType: Prefix
+        backend:
+          service:
+            name: angular-app
+            port:
+              number: 80
