@@ -10,10 +10,17 @@ export class KeycloakGuard implements CanActivate {
 
   constructor(private keycloakService: KeycloakService) { }
 
-  canActivate(
+  async canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return this.keycloakService.isLoggedIn();
+  ): Promise<boolean | UrlTree> {
+    const isLoggedIn = await this.keycloakService.isLoggedIn();
+
+    if (!isLoggedIn) {
+      console.log('Not logged in, saving URL:', state.url);
+      localStorage.setItem('redirectUrl', state.url);
+    }
+
+    return isLoggedIn;
   }
 }

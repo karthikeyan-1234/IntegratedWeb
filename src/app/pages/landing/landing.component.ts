@@ -40,7 +40,8 @@ export class LandingComponent {
   }
 
   addToCart(product: Product){
-    this.cartService.addToCart(product)
+    console.log("Adding to cart: ", product);
+    //this.cartService.addToCart(product)
   }
 
   removeFromCart(productId: number){
@@ -57,8 +58,10 @@ export class LandingComponent {
   toggleCart(product: Product){
     if(this.cartItems().find(x => x.product.id === product.id))
       this.cartService.removeFromCart(product)
-    else
+    else{
+      console.log("Adding to cart: ", product);
       this.cartService.addToCart(product)
+    }
   }
 
   getCartIcon(productId:number):string{

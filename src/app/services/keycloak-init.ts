@@ -13,6 +13,8 @@ export function initializeKeycloak(keycloak: KeycloakService): () => Promise<voi
       initOptions: {
         onLoad: 'login-required', //'check-sso',
         checkLoginIframe: false, // Can enable for HTTPS
+        responseMode: 'query', // Use query parameters instead of fragments
+        //redirectUri: window.location.origin + '/landing', // Redirect directly to landing
         //pkceMethod: false, //set to false to disable https // 'S256'Will work with HTTPS
         //silentCheckSsoRedirectUri: window.location.origin + '/assets/silent-check-sso.html'
       },
@@ -69,6 +71,17 @@ export function initializeKeycloak(keycloak: KeycloakService): () => Promise<voi
         console.warn('No roles found in Access Token claims.');
       }
       // --------------------------------------------------------------------------------------------------
+
+
+      // ✅ After login, check if there's a saved URL and redirect there
+      const redirectUrl = localStorage.getItem('redirectUrl');
+
+      console.log('Redirect URL after login:', redirectUrl);
+
+      if (redirectUrl) {
+        localStorage.removeItem('redirectUrl'); // Clean up after reading
+        window.location.href = window.location.origin + redirectUrl;
+      }
 
     });
 }

@@ -8,7 +8,11 @@ export class AuthService {
   constructor(private keycloakService: KeycloakService) {}
 
   async logout(): Promise<void> {
-    await this.keycloakService.logout(window.location.origin + '/web/'); //Was earlier simply, await this.keycloakService.logout(window.location.origin)
+    console.log('Logout called, current path:', window.location.pathname);
+    localStorage.setItem('redirectUrl', window.location.pathname);
+
+    console.log('Saved to localStorage:', localStorage.getItem('redirectUrl'));
+    await this.keycloakService.logout(window.location.origin + '/landing/'); //Was earlier simply, await this.keycloakService.logout(window.location.origin)
   }
 
   async loadUserProfile(): Promise<any> {

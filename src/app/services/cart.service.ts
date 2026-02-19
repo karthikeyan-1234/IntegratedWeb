@@ -53,9 +53,22 @@ export class CartService {
       return false;
     }
 
-    this.cartItems.update(oldItems => {
+    var cartItem = {
+      product_id: newProduct.id,
+      quantity: 1
+    }
+
+    this.http.post(environment.apiBaseUrl + "/Cart/AddCartItemAsync", cartItem).subscribe(res => {
+      console.log(res);
+          this.cartItems.update(oldItems => {
       return [...oldItems, {product:newProduct, quantity:1}] //use spread operator to add new product to the oldItems 
     })
+    }, err => {
+      console.log(err);
+      return false;
+    })
+
+
 
     return true;
 
@@ -65,10 +78,19 @@ export class CartService {
     var isExists = this.cartItems().find(x => x.product.id === existingProduct.id);
 
     if(isExists){
-      this.cartItems.update(oldItems => {
-        return oldItems.filter(x => x.product.id!= existingProduct.id)
+
+      var productId = existingProduct.id
+
+      this.http.delete(environment.apiBaseUrl + "/Cart/DeleteCartItemAsync?itemId=" + productId).subscribe(res => {
+        console.log(res);
+        this.cartItems.update(oldItems => {
+            return oldItems.filter(x => x.product.id!= existingProduct.id)
+          })
+        return true;
+      }, err => {
+        console.log(err);
+        return false;
       })
-      return true;
     }
 
     return false;
@@ -78,9 +100,18 @@ export class CartService {
     var isExists = this.cartItems().find(x => x.product.id === productId)
 
     if(isExists){
-      this.cartItems.update(oldItems => {
-        return oldItems.filter(x => x.product.id != productId)
+
+      this.http.delete(environment.apiBaseUrl + "/Cart/DeleteCartItemAsync?itemId=" + productId).subscribe(res => {
+        console.log(res);
+
+        this.cartItems.update(oldItems => {
+            return oldItems.filter(x => x.product.id != productId)
+          })
+      }, err => {
+        console.log(err);
       })
+
+
     }
   }
 
